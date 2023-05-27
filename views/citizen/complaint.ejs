@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Compalints</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Complaint Management System</a>
+
+        <div class="text-align" id="navbarTogglerDemo02">
+          <span
+            ><a href="#" class="user-badge"><i class="fa-solid fa-user"></i></a
+          ></span>
+          <span class="user-name">Swornim Bhattarai</span>
+        </div>
+      </div>
+    </nav>
+    <div class="dashboard">
+      <div class="container">
+        <div class="form-complaint">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card custom-card">
+                <div class="card-body">
+                  <div class="flex-it">
+                    <h4 class="card-title">All Complaints</h4>
+                    <select
+                          class="form-select form-margin complaint-page-select"
+                          aria-label=".form-select-lg example"
+                        >
+                          <option value="1" selected>All</option>
+                          <option value="2">Success</option>
+                          <option value="3">Progress</option>
+                          <option value="4">Queue</option>
+                        </select>
+                  </div>
+                  <div class="">
+                    <div class="row">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>complaint Title</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% let i=1; payload.forEach(complaint=>{ %>
+                          <tr>
+                            <td><%=i++ %></td>
+                            <td>
+                              <a
+                                href="/details/<%=complaint._id %>"
+                                class="table-complaint-list"
+                                ><%= complaint.title %></a
+                              >
+                            </td>
+                            <td>
+                              <span
+                                class="badge <% if(complaint.status == 'Queue'){ %> badge-queue <% }%> <%if(complaint.status == 'Progress'){%>badge-progress<%}else{%>badge-success <%}%>"
+                                ><% if(complaint.status == 'Queue'){ %> Queue <%
+                                }%> <%if(complaint.status ==
+                                'Progress'){%>Progress<%}%> <%if(complaint.status
+                                == 'Success'){%>Success <%}%></span
+                              >
+                            </td>
+                            <td><%=complaint.Date.substr(0,15) %></td>
+                          </tr>
+                          <%}) %>
+                        </tbody>
+                      </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
