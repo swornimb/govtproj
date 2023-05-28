@@ -5,28 +5,51 @@ const Complaint = require("../models/complaint");
 const user = require("../models/user");
 const jwt = require("jsonwebtoken");
 const { jwtTokenAuth } = require("../middleware/jwtTokenAuth");
+const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary").v2;
 
-router.get("/complaint", jwtTokenAuth, async (_, res) => {
-  let all = await Complaint.find().sort({ _id: -1 });
-  res.render("citizen/complaint", { payload: all });
+router.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
+
+cloudinary.config({
+  cloud_name: "dgggekbbd",
+  api_key: "143297277947985",
+  api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
+});
+
+router.get("/complaint", jwtTokenAuth, async (req, res) => {
+  let all = await Complaint.find({ category: "public" }).sort({ _id: -1 });
+  res.render("citizen/complaint", { payload: all, userName: req.cookies.user });
 });
 
 router.get("/details/:id", jwtTokenAuth, async (req, res) => {
   let all = await Complaint.findById(req.params.id);
-  res.render("citizen/detail", { payload: all });
+  res.render("citizen/detail", { payload: all, userName: req.cookies.user });
 });
 
-router.get("/", async (_, res) => {
-  let all = await Complaint.find().sort({ _id: -1 }).limit(9);
-  res.render("citizen/index", { payload: all });
+router.get("/", async (req, res) => {
+  let all = await Complaint.find({ category: "public" })
+    .sort({ _id: -1 })
+    .limit(9);
+  res.render("citizen/index", { payload: all, userName: req.cookies.user });
 });
 
 router.post("/", jwtTokenAuth, async (req, res) => {
+  const file = req.files.photo;
+  console.log(file);
+  let imageResult = await cloudinary.uploader.upload(file.tempFilePath);
+  console.log(imageResult.url);
   let complain = await new Complaint({
     title: req.body.title,
     description: req.body.description,
     category: req.body.category,
+    username: req.cookies.user,
+    images: imageResult.url,
   });
+
   await complain.save();
   res.redirect("/");
 });
@@ -52,6 +75,9 @@ router.post("/login", async (req, res) => {
         expiresIn: 60,
       }); // Env variable for key
       res.cookie("token", token, {
+        httpOnly: true,
+      });
+      res.cookie("user", loginUser.fullname, {
         httpOnly: true,
       });
       res.redirect("/");

@@ -26,7 +26,7 @@
           <span
             ><a href="#" class="user-badge"><i class="fa-solid fa-user"></i></a
           ></span>
-          <span class="user-name">Swornim Bhattarai</span>
+          <span class="user-name"><%=userName %></span>
         </div>
       </div>
     </nav>
@@ -85,7 +85,11 @@
                 <div class="card-body">
                   <h4 class="card-title">Register complaint</h4>
                   <div class="form-area">
-                    <form action="/" method="post">
+                    <form
+                      action="/"
+                      method="post"
+                      enctype="multipart/form-data"
+                    >
                       <div class="form-group form-margin">
                         <label class="input-title"
                           ><strong>Complaint Title</strong></label
@@ -125,15 +129,10 @@
                       </div>
 
                       <div class="form-group form-margin">
-                        <label for="exampleInputEmail1" class="input-title"
+                        <label class="input-title"
                           ><strong>Upload Images</strong></label
                         >
-                        <input
-                          type="file"
-                          class="form-control"
-                          id="exampleInputEmail1"
-                          multiple
-                        />
+                        <input type="file" class="form-control" name="photo" />
                       </div>
 
                       <div class="form-group mt-3 text-center">

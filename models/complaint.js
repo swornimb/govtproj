@@ -27,5 +27,9 @@ const complaintSchema = mongoose.Schema({
   images: {
     type: Array,
   },
+  username: {
+    type: String,
+    required: true,
+  },
 });
 module.exports = mongoose.model("complaints", complaintSchema);
