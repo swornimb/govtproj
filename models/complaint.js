@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017");
+mongoose.connect(
+  "mongodb+srv://swornim:swornim@cluster0.qclsycd.mongodb.net/?retryWrites=true&w=majority"
+);
 
 const complaintSchema = mongoose.Schema({
   title: {
@@ -29,6 +31,10 @@ const complaintSchema = mongoose.Schema({
   },
   username: {
     type: String,
+    required: true,
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
 });

@@ -18,85 +18,116 @@
     <title>Compalints</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Complaint Management System</a>
+    <div class="sidenav">
+      <button class="toggle-btn" onclick="toggleNav()">
+        Complaint Management System
+      </button>
+      <ul id="navItems">
+        <li><a href="/admin/dashboard">Dashboard</a></li>
+        <li><a href="/admin/complaint">Complaints</a></li>
+        <li><a href="/admin/logout">Logout</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Complaint Management System</a>
 
-        <div class="text-align" id="navbarTogglerDemo02">
-          <span
-            ><a href="#" class="user-badge"><i class="fa-solid fa-user"></i></a
-          ></span>
-          <span class="user-name">Admin</span>
+          <div class="text-align" id="navbarTogglerDemo02">
+            <span
+              ><a href="#" class="user-badge"
+                ><i class="fa-solid fa-user"></i></a
+            ></span>
+            <span class="user-name">Admin</span>
+          </div>
         </div>
-      </div>
-    </nav>
-    <div class="dashboard">
-      <div class="container">
-        <div class="form-complaint">
-          <div class="detail-card">
-            <div class="card-body">
-              <div class="detail-title">
-                <strong> <%payload.title %> </strong>
-              </div>
-              <div class="detail-body">
-                <div class="flex-it details">
-                  <div class="info">
-                    <div class="date">
-                      <span><i class="fa-solid fa-calendar-days"></i></span>
-                      4 days ago
-                    </div>
-                    <div class="name">
-                      <span><i class="fa-solid fa-user"></i></span>
-                      <%=payload.username %>
-                    </div>
-                  </div>
-                  <div class="">
-                    <form
-                      class="admin-detail flex-it"
-                      action="/admin/details/<%=payload._id %>"
-                      method="POST"
-                    >
-                      <input type="hidden" name="_method" value="put" />
-                      <select
-                        name="status"
-                        class="form-select form-margin complaint-page-select"
-                        required
-                      >
-                        <option value="Success">Success</option>
-                        <option value="Progress">Progress</option>
-                        <option value="Queue">Queue</option>
-                      </select>
-                      <button type="submit" class="btn btn-success">
-                        Submit
-                      </button>
-                    </form>
-                  </div>
+      </nav>
+      <div class="dashboard">
+        <div class="container">
+          <div class="form-complaint">
+            <div class="detail-card">
+              <div class="card-body">
+                <div class="detail-title">
+                  <strong> <%payload.title %> </strong>
                 </div>
-                <p><%=payload.description %></p>
-                <!-- <div class="row">
-                  <div class="col-md-4">
-                    <div class="image">
-                      <img src="pothole-1138292-1661174905.jpg" />
+                <div class="detail-body">
+                  <div class="flex-it details">
+                    <div class="info">
+                      <div class="date">
+                        <span><i class="fa-solid fa-calendar-days"></i></span>
+                        4 days ago
+                      </div>
+                      <div class="name">
+                        <span><i class="fa-solid fa-user"></i></span>
+                        <%=payload.username %>
+                      </div>
+                    </div>
+                    <div class="">
+                      <form
+                        class="admin-detail flex-it"
+                        action="/admin/details/<%=payload._id %>"
+                        method="POST"
+                      >
+                        <input type="hidden" name="_method" value="put" />
+                        <select
+                          name="status"
+                          class="form-select form-margin complaint-page-select"
+                          required
+                        >
+                          <option value="Success">Success</option>
+                          <option value="Progress">Progress</option>
+                          <option value="Queue">Queue</option>
+                        </select>
+                        <button type="submit" class="btn btn-success">
+                          Submit
+                        </button>
+                      </form>
                     </div>
                   </div>
-                  <div class="col-md-4">
-                    <div class="image">
-                      <img src="pothole-1138292-1661174905.jpg" />
+                  <p><%=payload.description %></p>
+                  <!-- <div class="row">
+                    <div class="col-md-4">
+                      <div class="image">
+                        <img src="pothole-1138292-1661174905.jpg" />
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="image">
-                      <img src="pothole-1138292-1661174905.jpg" />
+                    <div class="col-md-4">
+                      <div class="image">
+                        <img src="pothole-1138292-1661174905.jpg" />
+                      </div>
                     </div>
-                  </div>
-                </div> -->
+                    <div class="col-md-4">
+                      <div class="image">
+                        <img src="pothole-1138292-1661174905.jpg" />
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <script>
+      function toggleNav() {
+        var sidenav = document.querySelector(".sidenav");
+        var mainContent = document.querySelector(".main-content");
+        var navItems = document.getElementById("navItems");
+        var toggleBtn = document.querySelector(".toggle-btn");
 
+        sidenav.classList.toggle("open");
+        mainContent.classList.toggle("open");
+
+        if (sidenav.classList.contains("open")) {
+          navItems.style.display = "none";
+          toggleBtn.innerHTML = "&#9776;";
+        } else {
+          navItems.style.display = "block";
+          toggleBtn.innerHTML = "Complaint Management System";
+        }
+      }
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
       integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"

@@ -10,6 +10,10 @@
 .user-name {
   margin-left: 10px;
 }
+.name a {
+  text-decoration: none;
+  color: #000;
+}
 .card {
   position: relative;
   color: white;
@@ -77,7 +81,7 @@ td {
   background-color: rgba(255, 149, 0, 0.4);
 }
 .badge-queue {
-  color: rgb(223, 3, 3);
+  color: #df0303;
   background-color: rgba(223, 3, 3, 0.4);
 }
 .table-complaint-list {
@@ -220,5 +224,74 @@ div[role="progressbar"]::before {
   border: #33c498;
 }
 #submitForm {
+  color: black;
+}
+
+/* nav */
+
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #20c997;
+  overflow-x: hidden;
+  padding-top: 20px;
+  transition: 0.5s;
+  text-align: center;
+}
+
+.sidenav.open {
+  width: 70px;
+}
+.sidenav li {
+  background-color: #0fb482;
+}
+.sidenav .toggle-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center !important;
+  background-color: #555;
+  border: none;
+  padding: 20px 0px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidenav.open .toggle-btn {
+  text-align: center;
+}
+
+.sidenav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0px 0px;
+}
+
+.sidenav ul li {
+  padding: 20px 16px;
+}
+
+.sidenav ul li a {
+  text-decoration: none;
+  color: white;
+  display: block;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  transition: 0.5s;
+}
+
+.main-content.open {
+  margin-left: 70px;
+}
+.login_user {
+  text-decoration: none;
   color: black;
 }

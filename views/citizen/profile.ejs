@@ -14,8 +14,8 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="./css/style.css" />
-    <title>Compalints</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Profile</title>
   </head>
   <body>
     <div class="sidenav">
@@ -42,67 +42,74 @@
           </div>
         </div>
       </nav>
-
       <div class="dashboard swornim prajita">
         <div class="container">
+          <div>
+            <h1>Profile</h1>
+          </div>
           <div class="form-complaint">
             <div class="row">
               <div class="col-md-12">
                 <div class="card custom-card">
                   <div class="card-body">
-                    <div class="flex-it">
-                      <h4 class="card-title">All Complaints</h4>
-
-                      <select
-                        class="form-select form-margin complaint-page-select"
-                        aria-label=".form-select-lg example"
-                        id="search"
-                        onchange="fetchdat()"
-                      >
-                        <option value="All" selected>All</option>
-                        <option value="Success">Success</option>
-                        <option value="Progress">Progress</option>
-                        <option value="Queue">Queue</option>
-                      </select>
+                    <div class="profile">
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <td><%=userdata.fullname %></td>
+                        </tr>
+                        <tr>
+                          <th>E-mail</th>
+                          <td><%=userdata.email %></td>
+                        </tr>
+                        <tr>
+                          <th>Phone Number</th>
+                          <td><%=userdata.phonenumber %></td>
+                        </tr>
+                        <tr>
+                          <th>Address</th>
+                          <td><%=userdata.address %></td>
+                        </tr>
+                      </table>
                     </div>
-                    <div class="">
-                      <div class="row">
-                        <table>
-                          <thead>
-                            <tr>
-                              <th>No</th>
-                              <th>complaint Title</th>
-                              <th>Status</th>
-                              <th>Date</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <% let i=1; payload.forEach(complaint=>{ %>
-                            <tr>
-                              <td><%=i++ %></td>
-                              <td>
-                                <a
-                                  href="/details/<%=complaint._id %>"
-                                  class="table-complaint-list"
-                                  ><%= complaint.title %></a
-                                >
-                              </td>
-                              <td>
-                                <span
-                                  class="badge <% if(complaint.status == 'Queue'){ %> badge-queue <% }%> <%if(complaint.status == 'Progress'){%>badge-progress<%}else{%>badge-success <%}%>"
-                                  ><% if(complaint.status == 'Queue'){ %> Queue
-                                  <% }%> <%if(complaint.status ==
-                                  'Progress'){%>Progress<%}%>
-                                  <%if(complaint.status == 'Success'){%>Success
-                                  <%}%></span
-                                >
-                              </td>
-                              <td><%=complaint.Date.substr(0,15) %></td>
-                            </tr>
-                            <%}) %>
-                          </tbody>
-                        </table>
-                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h1>My Complaints</h1>
+          </div>
+          <div class="form-complaint">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card custom-card">
+                  <div class="card-body">
+                    <div class="profile">
+                      <table>
+                        <% let i=1; allComplaints.forEach(complaint=>{ %>
+                        <tr>
+                          <td><%=i++ %></td>
+                          <td>
+                            <a
+                              href="/details/<%=complaint._id %>"
+                              class="table-complaint-list"
+                              ><%= complaint.title %></a
+                            >
+                          </td>
+                          <td>
+                            <span
+                              class="badge <% if(complaint.status == 'Queue'){ %> badge-queue <% }%> <%if(complaint.status == 'Progress'){%>badge-progress<%}else{%>badge-success <%}%>"
+                              ><% if(complaint.status == 'Queue'){ %> Queue <%
+                              }%> <%if(complaint.status ==
+                              'Progress'){%>Progress<%}%> <%if(complaint.status
+                              == 'Success'){%>Success <%}%></span
+                            >
+                          </td>
+                          <td><%=complaint.Date.substr(0,15) %></td>
+                        </tr>
+                        <%}) %>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -113,15 +120,6 @@
       </div>
     </div>
     <script>
-      let search = document.getElementById("search");
-      async function fetchdat() {
-        let value = await fetch(
-          (window.location.href =
-            "http://localhost:5000/complaint?status=" + search.value)
-        );
-        console.log(value);
-      }
-      console.log(search);
       function toggleNav() {
         var sidenav = document.querySelector(".sidenav");
         var mainContent = document.querySelector(".main-content");
