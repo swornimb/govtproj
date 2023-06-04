@@ -19,6 +19,7 @@ cloudinary.config({
   cloud_name: "dgggekbbd",
   api_key: "143297277947985",
   api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
+  secure: true,
 });
 
 router.get("/complaint", jwtTokenAuth, async (req, res) => {
@@ -107,16 +108,18 @@ router.post("/", jwtTokenAuth, async (req, res) => {
     if (!(req.files.photo === null)) {
       const file = req.files.photo;
       console.log(file);
-      var imageResult = await cloudinary.uploader.upload(file.tempFilePath);
+      var imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
+        secure: true,
+      });
     }
 
-    console.log(imageResult.url);
+    console.log(imageResult);
     let complain = new Complaint({
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
       username: req.cookies.user,
-      images: imageResult.url,
+      images: imageResult.secure_url,
       userId: userIdObj,
     });
     await complain.save();
@@ -140,7 +143,7 @@ router.post("/login", async (req, res) => {
       if (check) {
         if (loginUser.email == "admin@gmail.com") {
           let token = jwt.sign({ user: loginUser._id }, "admin", {
-            expiresIn: 60,
+            expiresIn: 3600,
           }); // Env variable for key
           res.cookie("admin", token, {
             httpOnly: true,
@@ -148,7 +151,7 @@ router.post("/login", async (req, res) => {
           res.redirect("/admin/dashboard");
         } else {
           let token = jwt.sign({ user: loginUser._id }, "shhhhh", {
-            expiresIn: 60,
+            expiresIn: 36000,
           }); // Env variable for key
           res.cookie("token", token, {
             httpOnly: true,
