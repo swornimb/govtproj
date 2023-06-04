@@ -105,21 +105,19 @@ router.get("/profile/:id", async (req, res) => {
 router.post("/", jwtTokenAuth, async (req, res) => {
   try {
     let userIdObj = req.cookies.userID;
-    if (!(req.files.photo === null)) {
-      const file = req.files.photo;
-      console.log(file);
+    const file = req.files && req.files.photo ? req.files.photo : null;
+    if (file) {
       var imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
         secure: true,
       });
     }
-
     console.log(imageResult);
     let complain = new Complaint({
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
       username: req.cookies.user,
-      images: imageResult.secure_url,
+      images: imageResult?.secure_url || "null",
       userId: userIdObj,
     });
     await complain.save();

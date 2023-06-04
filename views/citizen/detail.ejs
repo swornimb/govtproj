@@ -92,13 +92,17 @@
                       <%}%>
                     </div>
                     <p><%=payload.description %></p>
+                    <% if(payload.images[0]!="null"){%>
                     <div class="row">
-                      <div class="col-md-12">
+                      <div class="col-md-12">                    
                         <div class="image">
                           <img src="<%=payload.images[0]  %>" />
                         </div>
                       </div>
                     </div>
+                  <%}else{%>
+                    No Image
+                  <%}%>
                   </div>
                 </div>
               </div>
