@@ -17,29 +17,40 @@ cloudinary.config({
 });
 
 exports.allPublicComplaints = async (req, res) => {
+    try {
 
-    const result = await Complaints.find({
-        category: 'public'
-    }).sort({ _id: -1 }).populate('userId')
-    console.log({ result });
-    res.status(200).send(result)
+        const result = await Complaints.find({
+            category: 'public'
+        }).sort({ _id: -1 }).populate('userId')
+        console.log({ result });
+        res.status(200).send(result)
+    }
+    catch (err) {
+        res.send({ status: 201, message: "Something went wrong" })
+        console.log(err)
+    }
 
 }
 exports.getOneComplaints = async (req, res) => {
+    try {
 
-    const result = await Complaints.find({
-        _id: req.params.id
+        const result = await Complaints.find({
+            _id: req.params.id
 
-    });
-    res.status(200).send(result)
-
+        });
+        res.status(200).send(result)
+    }
+    catch (err) {
+        res.send({ status: 201, message: "Something went wrong" })
+        console.log(err)
+    }
 }
 
 exports.saveComplaint = async (req, res) => {
     console.log("Here")
     console.log(req.body)
-  if (!req.body) {
-      
+    if (!req.body) {
+
         res.status(400).send({ status: 400, message: "Any field cannot be empty" });
         return;
     }
@@ -219,24 +230,36 @@ exports.forgotPassword = async (req, res) => {
 }
 
 exports.getOwnComplaints = async (req, res) => {
-    const id = req.params.id
-    const result = await Complaints.find({
-        userId: id
+    try {
+        const id = req.params.id
+        const result = await Complaints.find({
+            userId: id
 
-    });
+        }).sort({ _id: -1 });
 
-    // console.log({ result });
-    res.status(200).send(result)
+        // console.log({ result });
+        res.status(200).send(result)
+    }
+    catch (err) {
+        res.send({ status: 201, message: "Something went wrong" })
+        console.log(err)
+    }
 }
 
 exports.getProfile = async (req, res) => {
     const id = req.params.id
-    const result = await user.find({
-        _id: id
+    try {
+        const result = await user.find({
+            _id: id
 
-    });
+        });
 
-    // console.log({ result });
-    res.status(200).send(result)
+        // console.log({ result });
+        res.status(200).send(result)
+    }
+    catch (err) {
+        res.send({ status: 201, message: "Something went wrong" })
+        console.log(err)
+    }
 
 }
