@@ -8,6 +8,8 @@ const { jwtTokenAuth } = require("../middleware/jwtTokenAuth");
 const fileUpload = require("express-fileupload");
 const { default: mongoose, get } = require("mongoose");
 const cloudinary = require("cloudinary").v2;
+const JWT_SECRET = 'hgfhd6ej4jhF3'
+const nodemailer = require("nodemailer")
 
 router.use(
   fileUpload({
@@ -176,27 +178,165 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/signup", async (_, res) => {
-  res.render("citizen/signup");
+  res.render("citizen/signup",{message:""});
 });
 
 router.post("/signup", async (req, res) => {
-  bcrypt.hash(req.body.password, 10, function (err, hash) {
-    let data = new user({
-      fullname: req.body.fullname,
-      address: req.body.address,
-      phonenumber: req.body.number,
-      email: req.body.email,
-      password: hash,
-    });
-    data.save();
-  });
-  res.redirect("/login");
+
+  user.findOne({ email: req.body.email })
+  .then(_user => {
+      if (_user) {
+          res.render("citizen/signup",{message:"User already exists."})
+      }
+      else {
+        bcrypt.hash(req.body.password, 10, function (err, hash) {
+          let data = new user({
+            fullname: req.body.fullname,
+            address: req.body.address,
+            phonenumber: req.body.number,
+            email: req.body.email,
+            password: hash,
+          });
+          data.save();
+        });
+        res.redirect("/login");
+      }
+  })
+
+
+
+
+ 
 });
 
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.clearCookie("user");
   res.redirect("/");
+});
+
+
+router.get("/forget-password", async (req, res) => {
+  res.render("forget-password")
+})
+
+router.post("/forget-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    user.findOne({ email: email })
+      .then(_user => {
+        if (_user) {
+
+          const secret = JWT_SECRET + _user.password
+          const payload = {
+            email: _user.email,
+            id: _user._id
+
+          }
+          const token = jwt.sign(payload, secret, { expiresIn: '60m' })
+          const link = `http://localhost:5000/reset-password/${_user.id}/${token}`
+          console.log(`http://localhost:5000/reset-password/${_user.id}/${token}`)
+          var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            requireTLS: true,
+            auth: {
+              user: 'prajita.balami@deerwalk.edu.np',
+              pass: "ljeibasebfiuhvzp"
+            }
+
+          });
+          var mailOptions = {
+            from: 'prajita.balami@deerwalk.edu.np',
+            to: `${email}`,
+            subject: 'Reset Password',
+            text: `http://localhost:5000/reset-password/${_user.id}/${token}`
+
+          }
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            }
+            else {
+              console.log("email has been sent", info.response);
+            }
+          })
+
+          console.log(link)
+          res.send("Password reset link has been sent to your email.")
+
+
+        }
+        else {
+          res.send({ status: 202, message: "No user found" })
+
+        }
+      })
+
+
+  }
+  catch (err) {
+    res.send({ status: 201, message: "Something went wrong" })
+    console.log(err)
+  }
+})
+
+
+
+router.get("/reset-password/:id/:token", async (req, res) => {
+  const { id, token } = req.params
+
+  //check if user exist in db
+  user.findOne({ _id: id })
+    .then(_user => {
+      if (_user) {
+        const secret = JWT_SECRET + _user.password
+        try {
+
+          const payload = jwt.verify(token, secret)
+          res.render('reset-password', { email: _user.email })
+
+        } catch (error) {
+          console.log(error.message)
+          res.send(error.message)
+
+        }
+      }
+      else {
+        res.send({ status: 202, message: "No user found" })
+
+      }
+    })
+});
+
+router.post("/reset-password/:id/:token", async (req, res) => {
+  const { id, token } = req.params
+  const password = req.body.password
+
+  const _user = await user.findOne({ _id: id });
+  if (!_user) {
+    res.send("No user found")
+  }
+  const secret = JWT_SECRET + _user.password
+  try {
+    const verify = jwt.verify(token, secret)
+    const encryptedPass = await bcrypt.hash(password, 10)
+    await user.updateOne(
+      { _id: id },
+      {
+        $set: {
+          password: encryptedPass
+        }
+      }
+    )
+    res.send("Updated")
+  } catch (error) {
+    res.send("Something went wrong")
+  }
+
+
 });
 
 module.exports = router;

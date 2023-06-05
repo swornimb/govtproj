@@ -15,9 +15,12 @@ app.use(express.json());
 
 const citizenRoute = require("./routes/citizen.js");
 const adminRoute = require("./routes/admin.js");
+const mobileRoute = require("./routes/mobileRoutes.js");
+
 
 app.use("/", citizenRoute);
 app.use("/admin", adminRoute);
+app.use("/user/mobile", mobileRoute);
 
 app.listen(5000, () => {
   console.log("server is running");
