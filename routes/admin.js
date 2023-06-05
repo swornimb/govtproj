@@ -18,6 +18,7 @@ router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
 router.get("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
   try {
     let all = await Complaint.findById(req.params.id);
+    console.log(all);
     res.render("admin/detail", { payload: all, put: true });
   } catch (error) {
     // Handle the exception
@@ -33,7 +34,7 @@ router.post("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
     });
     all.save();
     console.log(all);
-    res.send("admin/detail");
+    res.redirect("/admin/dashboard");
   } catch (error) {
     // Handle the exception
     console.error(error);
