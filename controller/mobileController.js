@@ -63,7 +63,8 @@ exports.saveComplaint = async (req, res) => {
         description: req.body.description,
         category: req.body.category,
         images: [req.body.images],
-        userId: userIdd
+        userId: userIdd,
+        username: req.body.username,
     })
 
     complain.save()
@@ -129,7 +130,8 @@ exports.login = (req, res, next) => {
                             message: "Success",
                             email: email,
                             token: token,
-                            userId: _user._id
+                            userId: _user._id,
+                            username: _user.fullname
                         })
 
                     }
