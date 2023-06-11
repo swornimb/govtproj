@@ -1,6 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Complaints = require('../models/complaint');
 const user = require("../models/user");
+const comment = require("../models/comment");
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -9,6 +10,7 @@ const cloudinary = require("cloudinary").v2;
 
 const JWT_SECRET = 'hgfhd6ej4jhF3'
 const nodemailer = require('nodemailer');
+const _ = require('lodash')
 
 cloudinary.config({
     cloud_name: "dgggekbbd",
@@ -264,4 +266,86 @@ exports.getProfile = async (req, res) => {
         console.log(err)
     }
 
+}
+
+
+exports.saveComments = async (req, res) => {
+    console.log("Here comments")
+    console.log(req.body)
+    if (!req.body) {
+        res.status(400).send({ status: 400, message: "Any field cannot be empty" });
+        return;
+    }
+
+    let userIdd = new mongoose.Types.ObjectId();
+    userIdd = req.body.userId
+    
+    let complaintIdd = new mongoose.Types.ObjectId();
+    complaintIdd = req.body.complaintId
+
+    
+    let parentIdd = new mongoose.Types.ObjectId();
+    parentIdd = req.body.parentId
+
+
+    const data = new comment({
+        message: req.body.message,
+        userId: userIdd,
+        complaintId : complaintIdd,
+        parentId : parentIdd || null
+    })
+
+    data.save()
+        .then(data => {
+            res.status(200).send(data)
+        })
+        .catch(error => {
+            res.status(500).send({
+                message: error.message || "Something went wrong"
+            });
+
+        });
+
+}
+
+exports.getComments = async (req, res) => {
+    try {
+
+        const result = await comment.find({
+            complaintId: req.params.id
+
+        }).sort({ _id: -1 }).populate('userId')
+   ;
+        res.status(200).send(result)
+    }
+    catch (err) {
+        res.send({ status: 201, message: "Something went wrong" })
+        console.log(err)
+    }
+}
+
+exports.getComplaints = async (req,res) => {
+    const result = await Complaints.findOne({ _id: req.params.id }).lean();
+    const comments_in_order = await comment.find({ complaintId: req.params.id})
+    .sort({ _id: -1 })
+    .populate('userId').lean();
+
+    result.comments_in_order = appendChildrenToParent(comments_in_order);
+
+    console.log("Commmm", result)
+    res.send(result)
+};
+
+function appendChildrenToParent(objects) {
+    const byId = _.keyBy(objects, "_id");
+
+    _.forEach(objects, (obj) => {
+        const parent = byId[obj.parentId];
+        if (parent) {
+            parent.children = parent.children || [];
+            parent.children.push(obj);
+        }
+    });
+
+    return _.filter(objects, (obj) => !obj.parentId);
 }
