@@ -8,8 +8,8 @@ const { jwtTokenAuth } = require("../middleware/jwtTokenAuth");
 const fileUpload = require("express-fileupload");
 const { default: mongoose, get } = require("mongoose");
 const cloudinary = require("cloudinary").v2;
-const JWT_SECRET = 'hgfhd6ej4jhF3'
-const nodemailer = require("nodemailer")
+const JWT_SECRET = "hgfhd6ej4jhF3";
+const nodemailer = require("nodemailer");
 
 router.use(
   fileUpload({
@@ -23,6 +23,10 @@ cloudinary.config({
   api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
   secure: true,
 });
+
+// -------------------------------------------GET---------------------------------------------
+
+//all complaint get
 
 router.get("/complaint", jwtTokenAuth, async (req, res) => {
   let status = req.query.status;
@@ -45,6 +49,8 @@ router.get("/complaint", jwtTokenAuth, async (req, res) => {
   });
 });
 
+// Complaint detail page
+
 router.get("/details/:id", jwtTokenAuth, async (req, res) => {
   try {
     let all = await Complaint.findById(req.params.id);
@@ -59,7 +65,7 @@ router.get("/details/:id", jwtTokenAuth, async (req, res) => {
     res.status(500).send("An error occurred.");
   }
 });
-
+// First page get
 router.get("/", async (req, res) => {
   try {
     let all = await Complaint.find({ category: "public" })
@@ -85,7 +91,7 @@ router.get("/", async (req, res) => {
     res.status(500).send("An error occurred.");
   }
 });
-
+// Profile get
 router.get("/profile/:id", async (req, res) => {
   try {
     let userIdObj = new mongoose.Types.ObjectId();
@@ -97,6 +103,8 @@ router.get("/profile/:id", async (req, res) => {
       allComplaints: allComplaints,
       userName: req.cookies.user,
       userid: req.cookies.userID,
+      realuserid: req.params.id,
+      isAdmin: req.cookies.admin,
     });
   } catch (error) {
     console.error(error);
@@ -104,24 +112,101 @@ router.get("/profile/:id", async (req, res) => {
   }
 });
 
+// Login Get
+
+router.get("/login", async (_, res) => {
+  res.render("citizen/login", { messege: "" });
+});
+
+// Signup Get
+router.get("/signup", async (_, res) => {
+  res.render("citizen/signup", { message: "" });
+});
+
+// Logout Get
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  res.clearCookie("user");
+  res.clearCookie("userID");
+  res.redirect("/");
+});
+// Forgot password get
+router.get("/forget-password", async (req, res) => {
+  res.render("forget-password");
+});
+
+// Password Reset get
+
+router.get("/reset-password/:id/:token", async (req, res) => {
+  const { id, token } = req.params;
+
+  //check if user exist in db
+  user.findOne({ _id: id }).then((_user) => {
+    if (_user) {
+      const secret = JWT_SECRET + _user.password;
+      try {
+        const payload = jwt.verify(token, secret);
+        res.render("reset-password", { email: _user.email });
+      } catch (error) {
+        console.log(error.message);
+        res.send(error.message);
+      }
+    } else {
+      res.send({ status: 202, message: "No user found" });
+    }
+  });
+});
+
+// -------------------------------------------POST---------------------------------------------
+
+//Front page post
+
 router.post("/", jwtTokenAuth, async (req, res) => {
   try {
-    let userIdObj = req.cookies.userID;
-    const file = req.files && req.files.photo ? req.files.photo : null;
-    if (file) {
-      var imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
+    const { title, description, category } = req.body;
+    const file =
+      req.files && req.files.photo
+        ? Array.isArray(req.files.photo)
+          ? req.files.photo
+          : [req.files.photo]
+        : [];
+
+    // Validate input
+    if (!title) {
+      return res.status(400).send("Title is required");
+    }
+
+    if (!description) {
+      return res.status(400).send("Description is required");
+    }
+
+    if (!category) {
+      return res.status(400).send("Category is required");
+    }
+
+    if (!file) {
+      return res.status(400).send("Photo is required");
+    }
+
+    console.log(file);
+    let imageResult = [];
+    for (const i of file) {
+      let x = await cloudinary.uploader.upload(i.tempFilePath, {
         secure: true,
       });
+      imageResult.push(x.secure_url);
     }
-    console.log(imageResult);
-    let complain = new Complaint({
-      title: req.body.title,
-      description: req.body.description,
-      category: req.body.category,
+
+    const complain = new Complaint({
+      title,
+      description,
+      category,
       username: req.cookies.user,
-      images: imageResult?.secure_url || "null",
-      userId: userIdObj,
+      images: imageResult.length > 0 ? imageResult : null,
+      userId: req.cookies.userID,
     });
+
+    console.log(complain);
     await complain.save();
     res.redirect("/");
   } catch (error) {
@@ -131,10 +216,7 @@ router.post("/", jwtTokenAuth, async (req, res) => {
   }
 });
 
-router.get("/login", async (_, res) => {
-  res.render("citizen/login", { messege: "" });
-});
-
+// Login Post
 router.post("/login", async (req, res) => {
   try {
     let loginUser = await user.findOne({ email: req.body.email });
@@ -177,166 +259,124 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/signup", async (_, res) => {
-  res.render("citizen/signup",{message:""});
-});
+// Signup Post
 
 router.post("/signup", async (req, res) => {
+  const { fullname, address, number, email, password } = req.body;
 
-  user.findOne({ email: req.body.email })
-  .then(_user => {
-      if (_user) {
-          res.render("citizen/signup",{message:"User already exists."})
-      }
-      else {
-        bcrypt.hash(req.body.password, 10, function (err, hash) {
-          let data = new user({
-            fullname: req.body.fullname,
-            address: req.body.address,
-            phonenumber: req.body.number,
-            email: req.body.email,
-            password: hash,
-          });
-          data.save();
-        });
-        res.redirect("/login");
-      }
-  })
+  // Validate input
+  if (!fullname || !address || !number || !email || !password) {
+    return res.status(400).send("All fields are required");
+  }
 
+  if (!/^\d{9}/.test(number)) {
+    return res.status(400).send("Phone number must start with 9");
+  }
 
+  try {
+    const existingUser = await user.findOne({ email });
 
+    if (existingUser) {
+      return res.render("citizen/signup", { message: "User already exists." });
+    }
 
- 
+    bcrypt.hash(password, 10, function (err, hash) {
+      let data = new user({
+        fullname,
+        address,
+        phonenumber: number,
+        email,
+        password: hash,
+      });
+      data.save();
+    });
+
+    res.redirect("/login");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred.");
+  }
 });
 
-router.get("/logout", (req, res) => {
-  res.clearCookie("token");
-  res.clearCookie("user");
-  res.redirect("/");
-});
-
-
-router.get("/forget-password", async (req, res) => {
-  res.render("forget-password")
-})
+// Frogot password Post
 
 router.post("/forget-password", async (req, res) => {
   try {
     const { email } = req.body;
 
-    user.findOne({ email: email })
-      .then(_user => {
-        if (_user) {
-
-          const secret = JWT_SECRET + _user.password
-          const payload = {
-            email: _user.email,
-            id: _user._id
-
-          }
-          const token = jwt.sign(payload, secret, { expiresIn: '60m' })
-          const link = `http://localhost:5000/reset-password/${_user.id}/${token}`
-          console.log(`http://localhost:5000/reset-password/${_user.id}/${token}`)
-          var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-              user: 'prajita.balami@deerwalk.edu.np',
-              pass: "ljeibasebfiuhvzp"
-            }
-
-          });
-          var mailOptions = {
-            from: 'prajita.balami@deerwalk.edu.np',
-            to: `${email}`,
-            subject: 'Reset Password',
-            text: `http://localhost:5000/reset-password/${_user.id}/${token}`
-
-          }
-          transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-              console.log(error);
-            }
-            else {
-              console.log("email has been sent", info.response);
-            }
-          })
-
-          console.log(link)
-          res.send("Password reset link has been sent to your email.")
-
-
-        }
-        else {
-          res.send({ status: 202, message: "No user found" })
-
-        }
-      })
-
-
-  }
-  catch (err) {
-    res.send({ status: 201, message: "Something went wrong" })
-    console.log(err)
-  }
-})
-
-
-
-router.get("/reset-password/:id/:token", async (req, res) => {
-  const { id, token } = req.params
-
-  //check if user exist in db
-  user.findOne({ _id: id })
-    .then(_user => {
+    user.findOne({ email: email }).then((_user) => {
       if (_user) {
-        const secret = JWT_SECRET + _user.password
-        try {
+        const secret = JWT_SECRET + _user.password;
+        const payload = {
+          email: _user.email,
+          id: _user._id,
+        };
+        const token = jwt.sign(payload, secret, { expiresIn: "60m" });
+        const link = `http://localhost:5000/reset-password/${_user.id}/${token}`;
+        console.log(
+          `http://localhost:5000/reset-password/${_user.id}/${token}`
+        );
+        var transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          requireTLS: true,
+          auth: {
+            user: "prajita.balami@deerwalk.edu.np",
+            pass: "ljeibasebfiuhvzp",
+          },
+        });
+        var mailOptions = {
+          from: "prajita.balami@deerwalk.edu.np",
+          to: `${email}`,
+          subject: "Reset Password",
+          text: `http://localhost:5000/reset-password/${_user.id}/${token}`,
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("email has been sent", info.response);
+          }
+        });
 
-          const payload = jwt.verify(token, secret)
-          res.render('reset-password', { email: _user.email })
-
-        } catch (error) {
-          console.log(error.message)
-          res.send(error.message)
-
-        }
+        console.log(link);
+        res.send("Password reset link has been sent to your email.");
+      } else {
+        res.send({ status: 202, message: "No user found" });
       }
-      else {
-        res.send({ status: 202, message: "No user found" })
-
-      }
-    })
+    });
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
 });
 
+// Password Reset Post
 router.post("/reset-password/:id/:token", async (req, res) => {
-  const { id, token } = req.params
-  const password = req.body.password
+  const { id, token } = req.params;
+  const password = req.body.password;
 
   const _user = await user.findOne({ _id: id });
   if (!_user) {
-    res.send("No user found")
+    res.send("No user found");
   }
-  const secret = JWT_SECRET + _user.password
+  const secret = JWT_SECRET + _user.password;
   try {
-    const verify = jwt.verify(token, secret)
-    const encryptedPass = await bcrypt.hash(password, 10)
+    const verify = jwt.verify(token, secret);
+    const encryptedPass = await bcrypt.hash(password, 10);
     await user.updateOne(
       { _id: id },
       {
         $set: {
-          password: encryptedPass
-        }
+          password: encryptedPass,
+        },
       }
-    )
-    res.send("Updated")
+    );
+    res.send("Updated");
   } catch (error) {
-    res.send("Something went wrong")
+    res.send("Something went wrong");
   }
-
-
 });
 
 module.exports = router;

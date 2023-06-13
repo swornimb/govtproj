@@ -21,6 +21,14 @@ const complaintSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  statusbar: {
+    default: "0",
+    type: String,
+    require: true,
+  },
+  statusmessege: {
+    type: Array,
+  },
   Date: {
     default: new Date(),
     type: String,
@@ -34,7 +42,7 @@ const complaintSchema = mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref : 'user',
+    ref: "user",
     required: true,
   },
 });

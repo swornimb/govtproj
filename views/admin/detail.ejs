@@ -45,55 +45,132 @@
       <div class="dashboard">
         <div class="container">
           <div class="form-complaint">
-            <div class="detail-card">
-              <div class="card-body">
-                <div class="detail-title">
-                  <strong> <%payload.title %> </strong>
-                </div>
-                <div class="detail-body">
-                  <div class="flex-it details">
-                    <div class="info">
-                      <div class="date">
-                        <span><i class="fa-solid fa-calendar-days"></i></span>
-                        4 days ago
-                      </div>
-                      <div class="name">
-                        <span
-                          ><a href="/profile/<%=payload.userId %>"
-                            ><i class="fa-solid fa-user"></i></a
-                        ></span>
-                        <%=payload.username %>
-                      </div>
-                    </div>
-                    <div class="">
-                      <form
-                        class="admin-detail flex-it"
-                        action="/admin/details/<%=payload._id %>"
-                        method="POST"
-                      >
-                        <input type="hidden" name="_method" value="put" />
-                        <select
-                          name="status"
-                          class="form-select form-margin complaint-page-select"
-                          required
-                        >
-                          <option value="Success">Success</option>
-                          <option value="Progress">Progress</option>
-                          <option value="Queue">Queue</option>
-                        </select>
-                        <button type="submit" class="btn btn-success">
-                          Submit
-                        </button>
-                      </form>
-                    </div>
+            <div class="detail-card row">
+              <div class="col-md-8">
+                <div class="card-body">
+                  <div class="detail-title">
+                    <strong> <%=payload.title %> </strong>
                   </div>
-                  <p><%=payload.description %></p>
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="image">
-                        <img src="<%=payload.images[0] %>" />
+                  <div class="detail-body">
+                    <div class="flex-it details">
+                      <div class="info">
+                        <div class="date">
+                          <span><i class="fa-solid fa-calendar-days"></i></span>
+                          4 days ago
+                        </div>
+                        <div class="date">
+                          <span
+                            ><a href="/profile/<%=payload.userId %>"
+                              ><i class="fa-solid fa-user"></i></a
+                          ></span>
+                          <%=payload.username %>
+                        </div>
+                        <div class="date">
+                          <span
+                            ><a href="/profile/<%=payload.userId %>"
+                              ><i class="fa-solid fa-spinner"></i></a
+                          ></span>
+                          <%=payload.status %>
+                        </div>
                       </div>
+                      <div class=""></div>
                     </div>
+                    <p><%=payload.description %></p>
+                    <% if(payload.images){%>
+                    <div class="row">
+                      <% payload.images.forEach(i=>{%>
+                      <div class="col-md-6 mx-auto">
+                        <div class="image">
+                          <img src="<%=i %>" />
+                        </div>
+                      </div>
+
+                      <% }) %>
+                    </div>
+                    <%}else{%> No Image <%}%>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card-body">
+                  <div class="detail-title">
+                    <strong> Action Panel </strong>
+                  </div>
+                  <div class="detail-body">
+                    <form
+                      class="admin-detail"
+                      action="/admin/details/<%=payload._id %>"
+                      method="POST"
+                    >
+                      <div class="form-group">
+                        <div class="progress_popup w-100">
+                          <label>Title</label>
+                          <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            value="<%=payload.title  %>"
+                          />
+                        </div>
+                        <div class="progress_popup w-100 my-2">
+                          <label>Description</label>
+                          <textarea class="form-control" name="description"><%= payload.description %></textarea>
+                        </div>
+                        <div class="progress_popup w-100 my-2">
+                          <label>Status</label>
+                          <select
+                            name="status"
+                            id="action"
+                            class="form-select form-margin complaint-page-select form-control w-100"
+                            required
+                            onchange="progresspopup()"
+                          >
+                            <option value="Queue"<% if(payload.status =="Queue" ){%>selected <%} %>>Queue</option>
+                            <option value="Progress"<% if(payload.status =="Progress" ){%>selected <%} %>>Progress</option>
+                            <option value="Success"<% if(payload.status =="Success" ){%>selected <%} %>>Success</option>
+                          </select>
+                        </div>
+
+                        <div class="progress_popup w-100" id="p_pup">
+                          <div class="flex-it">
+                            <input
+                              type="range"
+                              name="progressbar"
+                              class="win10-thumb w-100"
+                              min="0"
+                              max="100"
+                              value="<%=payload.statusbar %>"
+                              step="5"
+                              data-step-labels="[0, 25, 50, 75, 100]"
+                              id="p_pup_range"
+                              onchange="valueUpdate()"
+                            />
+                            <div class="rangeValue" id="rangeValue"><%=payload.statusbar %></div>
+                          </div>
+                          <label>Status Messege</label>
+                          <div class="timeline">
+                          <div class="outer">
+                            <% payload.statusmessege.forEach(messege=>{%>
+                              <div class="statuscard">
+                                <h6 class="title"><%=messege%></p></h6>
+                              </div>
+                            <%}) %>
+                          </div>
+                        </div>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="p_pup_desc"
+                            placeholder="Status Messege"
+                            name="progressmessege"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <button type="submit" class="btn btn-success mt-3">
+                        Submit
+                      </button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -117,8 +194,47 @@
           toggleBtn.innerHTML = "&#9776;";
         } else {
           navItems.style.display = "block";
-          toggleBtn.innerHTML = "Complaint Management System";
+          toggleBtn.innerHTML = "CMS";
         }
+      }
+    </script>
+    <script>
+      let action = document.getElementById("action");
+        let range = document.getElementById("p_pup_range");
+        console.log(action.value);
+        if (action.value == "Progress") {
+          let progress_ppup = document.getElementById("p_pup");
+          progress_ppup.style.display = "block";
+          let p_pupdesc = document.getElementById("p_pup_desc");
+          p_pupdesc.setAttribute("required", "Ypu must update progress field");
+        } else {
+          let progress_ppup = document.getElementById("p_pup");
+          progress_ppup.style.display = "none";
+          let p_pupdesc = document.getElementById("p_pup_desc");
+          p_pupdesc.removeAttribute("required");
+        }
+      function progresspopup() {
+        let action = document.getElementById("action");
+        let range = document.getElementById("p_pup_range");
+        console.log(action.value);
+        if (action.value == "Progress") {
+          let progress_ppup = document.getElementById("p_pup");
+          progress_ppup.style.display = "block";
+          let p_pupdesc = document.getElementById("p_pup_desc");
+          p_pupdesc.setAttribute("required", "Ypu must update progress field");
+        } else {
+          let progress_ppup = document.getElementById("p_pup");
+          progress_ppup.style.display = "none";
+          let p_pupdesc = document.getElementById("p_pup_desc");
+          p_pupdesc.removeAttribute("required");
+        }
+      }
+
+      function valueUpdate() {
+        let range = document.getElementById("p_pup_range");
+        let dataValue = document.getElementById("rangeValue");
+
+        dataValue.innerHTML = range.value;
       }
     </script>
     <script

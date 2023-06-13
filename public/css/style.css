@@ -27,9 +27,7 @@
   opacity: 0.6;
 }
 .dashboard {
-  margin: 40px 40px;
-  padding: 40px 0px;
-  background: #f6f6f6;
+  margin: 40px 0px;
   border-radius: 15px;
 }
 .custom-card {
@@ -128,6 +126,8 @@ td {
 }
 .detail-body {
   padding: 20px;
+  border: 1px solid #0fb482;
+  border-radius: 0px 0px 20px 20px;
 }
 @keyframes growProgressBar {
   0%,
@@ -187,14 +187,6 @@ div[role="progressbar"]::before {
   margin: 0px 0px 10px 0px;
 }
 
-.admin-detail select {
-  width: 100%;
-  margin: 0px 10px;
-}
-.admin-detail input {
-  width: 100%;
-  margin: 0px 10px;
-}
 .mainContainer {
   position: absolute;
   top: 0;
@@ -229,7 +221,7 @@ div[role="progressbar"]::before {
   color: black;
 }
 
-#forget-password-id{
+#forget-password-id {
   color: #000;
 }
 
@@ -300,4 +292,196 @@ div[role="progressbar"]::before {
 .login_user {
   text-decoration: none;
   color: black;
+}
+.comment-thread {
+  max-width: 100%;
+  margin: auto;
+  padding: 0 30px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 20px;
+}
+.m-0 {
+  margin: 0;
+}
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Comment */
+
+.comment {
+  position: relative;
+  margin: 20px auto;
+}
+.comment-heading {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  font-size: 14px;
+}
+.comment-voting {
+  width: 20px;
+  height: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.comment-voting button {
+  display: block;
+  width: 100%;
+  height: 50%;
+  padding: 0;
+  border: 0;
+  font-size: 10px;
+}
+.comment-info {
+  color: rgba(0, 0, 0, 0.5);
+  margin-left: 10px;
+}
+.comment-author {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+  text-decoration: none;
+}
+.comment-author:hover {
+  text-decoration: underline;
+}
+.replies {
+  margin-left: 20px;
+}
+
+/* Adjustments for the comment border links */
+
+.comment-border-link {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 12px;
+  height: calc(100% - 50px);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  background-color: rgba(0, 0, 0, 0.1);
+  background-clip: padding-box;
+}
+.comment-border-link:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.comment-body {
+  padding: 0 20px;
+  padding-left: 28px;
+}
+.replies {
+  margin-left: 28px;
+}
+
+/* Adjustments for toggleable comments */
+
+details.comment summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+}
+details.comment summary::-webkit-details-marker {
+  display: none;
+}
+details.comment:not([open]) .comment-heading {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+.comment-heading::after {
+  display: inline-block;
+  position: absolute;
+  right: 5px;
+  align-self: center;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.55);
+}
+details.comment[open] .comment-heading::after {
+  content: "Click to hide";
+}
+details.comment:not([open]) .comment-heading::after {
+  content: "Click to show";
+}
+
+/* Adjustment for Internet Explorer */
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* Resets cursor, and removes prompt text on Internet Explorer */
+  .comment-heading {
+    cursor: default;
+  }
+  details.comment[open] .comment-heading::after,
+  details.comment:not([open]) .comment-heading::after {
+    content: " ";
+  }
+}
+
+/* Styling the reply to comment form */
+
+.reply-form textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+.d-none {
+  display: none;
+}
+#p_pup {
+  display: none;
+}
+
+.rangeValue {
+  width: 30px;
+  text-align: end;
+}
+.timeline {
+  background: var(--primary-color);
+  margin: 20px auto;
+  padding: 20px;
+}
+
+/* Outer Layer with the timeline border */
+.outer {
+  border-left: 2px solid #333;
+}
+
+/* Card container */
+.statuscard {
+  position: relative;
+  text-align: left;
+  margin: 0 0 20px 20px;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 400px;
+  text-transform: capitalize;
+}
+
+/* Information about the timeline */
+
+/* Title of the card */
+.title {
+  position: relative;
+  color: #000;
+  text-align: left;
+}
+
+/* Timeline dot  */
+.statuscard::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 999px;
+  left: -31px;
+  border: 3px solid #0fb482;
 }

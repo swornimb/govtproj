@@ -42,6 +42,7 @@
       </nav>
       <div class="dashboard swornim prajita">
         <div class="container">
+          <% if((realuserid == userid)||(isAdmin)){ %>
           <div>
             <h1>Profile</h1>
           </div>
@@ -75,8 +76,31 @@
               </div>
             </div>
           </div>
+          <%}else{%>
           <div>
-            <h1>My Complaints</h1>
+            <h1>Profile</h1>
+          </div>
+          <div class="form-complaint">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card custom-card">
+                  <div class="card-body">
+                    <div class="profile">
+                      <table>
+                        <tr>
+                          <th>Name</th>
+                          <td><%=userdata.fullname %></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%}%>
+          <div>
+            <h1>User's Complaints</h1>
           </div>
           <div class="form-complaint">
             <div class="row">
@@ -132,7 +156,7 @@
           toggleBtn.innerHTML = "&#9776;";
         } else {
           navItems.style.display = "block";
-          toggleBtn.innerHTML = "Complaint Management System";
+          toggleBtn.innerHTML = "CMS";
         }
       }
     </script>

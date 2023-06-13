@@ -93,7 +93,7 @@
           }
       
           // Validate the phone number field
-          if (phoneNumber === "" || phoneNumber.length!==10) {
+          if (phoneNumber === "" || phoneNumber.length!==10||!phoneNumber.startsWith("9")) {
             alert("Please enter valid phone number.");
             return false;
           }

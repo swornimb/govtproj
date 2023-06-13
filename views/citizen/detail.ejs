@@ -18,94 +18,206 @@
     <title>Compalints</title>
   </head>
   <body>
-      <div class="sidenav">
-        <button class="toggle-btn" onclick="toggleNav()">
-          CMS
-        </button>
-        <ul id="navItems">
-          <li><a href="/">Dashboard</a></li>
-          <li><a href="/complaint">Complaints</a></li>
-          <li><a href="/logout">Logout</a></li>
-        </ul>
-      </div>
+    <div class="sidenav">
+      <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+      <ul id="navItems">
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/complaint">Complaints</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
 
-      <div class="main-content">
-        <nav class="navbar navbar-expand-lg bg-light">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="/">Complaint Management System</a>
+    <div class="main-content">
+      <nav class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Complaint Management System</a>
 
-            <div class="text-align" id="navbarTogglerDemo02">
-              <span
-                ><a href="/profile/<%=userid %>" class="user-badge"
-                  ><i class="fa-solid fa-user"></i></a
-              ></span>
-              <span class="user-name"><%=userName %></span>
-            </div>
+          <div class="text-align" id="navbarTogglerDemo02">
+            <span
+              ><a href="/profile/<%=userid %>" class="user-badge"
+                ><i class="fa-solid fa-user"></i></a
+            ></span>
+            <span class="user-name"><%=userName %></span>
           </div>
-        </nav>
-        <div class="dashboard">
-          <div class="container">
-            <div class="form-complaint">
-              <div class="detail-card">
-                <div class="card-body">
-                  <div class="detail-title">
-                    <strong> <%=payload.title %> </strong>
-                  </div>
-                  <div class="detail-body">
-                    <div class="flex-it details">
-                      <div class="info">
-                        <div class="date">
-                          <span><i class="fa-solid fa-calendar-days"></i></span>
-                          <%=payload.Date.substr(0,15) %>
-                        </div>
-                        <div class="name">
-                          <span><i class="fa-solid fa-user"></i></span>
-                          <a href="/profile/<%=payload.userId%>">
-                            <%=payload.username %></a
-                          >
-                        </div>
+        </div>
+      </nav>
+      <div class="dashboard">
+        <div class="container">
+          <div class="form-complaint row">
+            <div class="detail-card col-md-8">
+              <div class="card-body">
+                <div class="detail-title">
+                  <strong> <%=payload.title %> </strong>
+                </div>
+                <div class="detail-body">
+                  <div class="flex-it details">
+                    <div class="info">
+                      <div class="date">
+                        <span><i class="fa-solid fa-calendar-days"></i></span>
+                        <%=payload.Date.substr(0,15) %>
                       </div>
-                      <% if(payload.status=='Queue'){%>
-                      <div
-                        role="progressbar"
-                        aria-valuenow="0"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style="--value: 0"
-                      ></div>
-                      <%}%> <% if(payload.status=='Progress'){%>
-                      <div
-                        role="progressbar"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style="--value: 50"
-                      ></div>
-                      <%}%> <% if(payload.status=='Success'){%>
-                      <div
-                        role="progressbar"
-                        aria-valuenow="100"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style="--value: 100"
-                      ></div>
-                      <%}%>
-                    </div>
-                    <p><%=payload.description %></p>
-                    <% if(payload.images[0]!="null"){%>
-                    <div class="row">
-                      <div class="col-md-12">                    
-                        <div class="image">
-                          <img src="<%=payload.images[0]  %>" />
-                        </div>
+                      <div class="name">
+                        <span><i class="fa-solid fa-user"></i></span>
+                        <a href="/profile/<%=payload.userId%>">
+                          <%=payload.username %></a
+                        >
                       </div>
                     </div>
-                  <%}else{%>
-                    No Image
-                  <%}%>
+                    <% if(payload.status=='Queue'){%>
+                    <div
+                      role="progressbar"
+                      aria-valuenow="0"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      style="--value: 0"
+                    ></div>
+                    <%}%> <% if(payload.status=='Progress'){%>
+                    <div
+                      role="progressbar"
+                      aria-valuenow="<%=payload.statusbar %>"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      style="--value: <%=payload.statusbar %>"
+                    ></div>
+                    <%}%> <% if(payload.status=='Success'){%>
+                    <div
+                      role="progressbar"
+                      aria-valuenow="100"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      style="--value: 100"
+                    ></div>
+                    <%}%>
                   </div>
+                  <p><%=payload.description %></p>
+                  <% if(payload.images){%>
+                  <div class="row">
+                    <% payload.images.forEach(i=>{%>
+                    <div class="col-md-6 mx-auto">
+                      <div class="image">
+                        <img src="<%=i %>" />
+                      </div>
+                    </div>
+
+                    <% }) %>
+                  </div>
+                  <%}else{%> No Image <%}%>
                 </div>
               </div>
+            </div>
+            <div class="col-md-4">
+              <h3>Complaint Status</h3>
+              <div class="timeline">
+                <div class="outer">
+                  <% payload.statusmessege.forEach(messege=>{%>
+                    <div class="statuscard">
+                      <h6 class="title"><%=messege%></p></h6>
+                    </div>
+                  <%}) %>
+                </div>
+              </div>
+            </div>
+            <div class="comment-thread">
+              <!-- Comment 1 start -->
+              <details open class="comment" id="comment-1">
+                <a href="#comment-1" class="comment-border-link">
+                  <span class="sr-only">Jump to comment-1</span>
+                </a>
+                <summary>
+                  <div class="comment-heading">
+                    <div class="comment-info">
+                      <a href="#" class="comment-author">someguy14</a>
+                    </div>
+                  </div>
+                </summary>
+
+                <div class="comment-body">
+                  <p>
+                    This is really great! I fully agree with what you wrote, and
+                    this is sure to help me out in the future. Thank you for
+                    posting this.
+                  </p>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-toggle="reply-form"
+                    data-target="comment-1-reply-form"
+                  >
+                    Reply
+                  </button>
+
+                  <!-- Reply form start -->
+                  <form
+                    method="POST"
+                    class="reply-form d-none"
+                    id="comment-1-reply-form"
+                  >
+                    <textarea
+                      placeholder="Reply to comment"
+                      rows="4"
+                    ></textarea>
+                    <button type="submit">Submit</button>
+                    <button
+                      type="button"
+                      data-toggle="reply-form"
+                      data-target="comment-1-reply-form"
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                  <!-- Reply form end -->
+                </div>
+
+                <div class="replies">
+                  <!-- Comment 2 start -->
+                  <details open class="comment" id="comment-2">
+                    <a href="#comment-2" class="comment-border-link">
+                      <span class="sr-only">Jump to comment-2</span>
+                    </a>
+                    <summary>
+                      <div class="comment-heading">
+                        <div class="comment-info">
+                          <a href="#" class="comment-author">randomperson81</a>
+                        </div>
+                      </div>
+                    </summary>
+
+                    <div class="comment-body">
+                      <p>Took the words right out of my mouth!</p>
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-toggle="reply-form"
+                        data-target="comment-2-reply-form"
+                      >
+                        Reply
+                      </button>
+
+                      <!-- Reply form start -->
+                      <form
+                        method="POST"
+                        class="reply-form d-none"
+                        id="comment-2-reply-form"
+                      >
+                        <textarea
+                          placeholder="Reply to comment"
+                          rows="4"
+                        ></textarea>
+                        <button type="submit">Submit</button>
+                        <button
+                          type="button"
+                          data-toggle="reply-form"
+                          data-target="comment-2-reply-form"
+                        >
+                          Cancel
+                        </button>
+                      </form>
+                      <!-- Reply form end -->
+                    </div>
+                  </details>
+                </div>
+              </details>
+              <!-- Comment 1 end -->
             </div>
           </div>
         </div>
@@ -127,9 +239,26 @@
           toggleBtn.innerHTML = "&#9776;";
         } else {
           navItems.style.display = "block";
-          toggleBtn.innerHTML = "Complaint Management System";
+          toggleBtn.innerHTML = "CMS";
         }
       }
+    </script>
+
+    <script>
+      document.addEventListener(
+        "click",
+        function (event) {
+          var target = event.target;
+          var replyForm;
+          if (target.matches("[data-toggle='reply-form']")) {
+            replyForm = document.getElementById(
+              target.getAttribute("data-target")
+            );
+            replyForm.classList.toggle("d-none");
+          }
+        },
+        false
+      );
     </script>
 
     <script
