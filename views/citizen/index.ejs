@@ -22,9 +22,9 @@
     <div class="sidenav">
       <button class="toggle-btn" onclick="toggleNav()">CMS</button>
       <ul id="navItems">
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/complaint">Complaints</a></li>
-        <li><a href="/logout">Logout</a></li>
+        <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
+        <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
+        <li><a href="/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
     <%}%>
@@ -35,12 +35,20 @@
 
           <% if(userName){%>
 
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="/profile/<%=userid %>" class="user-badge"
-                ><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name"><%=userName %></span>
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="/profile/<%=userid %>" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name"><%=userName %></span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
 
           <%}else{%>
@@ -54,7 +62,9 @@
             <div class="col-md-3">
               <div class="card" id="registered">
                 <div class="card-body">
-                  <h6 class="card-title">Total complaint</h6>
+                  <h6 class="card-title" data-i18n="totalComplaint">
+                    Total complaint
+                  </h6>
                   <h3><%=everyData %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-list-check"></i>
@@ -65,7 +75,9 @@
             <div class="col-md-3">
               <div class="card" id="queue">
                 <div class="card-body">
-                  <h6 class="card-title">Complaint in Queue</h6>
+                  <h6 class="card-title" data-i18n="complaintsQueue">
+                    Complaint in Queue
+                  </h6>
                   <h3><%=queue %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-lines-leaning"></i>
@@ -76,7 +88,9 @@
             <div class="col-md-3">
               <div class="card" id="progress">
                 <div class="card-body">
-                  <h6 class="card-title">Complaint in Progress</h6>
+                  <h6 class="card-title" data-i18n="complaintsProgress">
+                    Complaint in Progress
+                  </h6>
                   <h3><%=progress %></h3>
                   <div class="card-icon">
                     <i class="fa-sharp fa-solid fa-spinner"></i>
@@ -87,7 +101,7 @@
             <div class="col-md-3">
               <div class="card" id="completed">
                 <div class="card-body">
-                  <h6 class="card-title">Completed</h6>
+                  <h6 class="card-title" data-i18n="completed">Completed</h6>
                   <h3><%=success %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-check"></i>
@@ -101,7 +115,9 @@
               <div class="col-md-6">
                 <div class="card custom-card">
                   <div class="card-body">
-                    <h4 class="card-title">Register complaint</h4>
+                    <h4 class="card-title" data-i18n="registerComplaint">
+                      Register complaint
+                    </h4>
                     <div class="form-area">
                       <form
                         action="/"
@@ -111,7 +127,9 @@
                       >
                         <div class="form-group form-margin">
                           <label class="input-title"
-                            ><strong>Complaint Title</strong></label
+                            ><strong data-i18n="complaintTitle"
+                              >Complaint Title</strong
+                            ></label
                           >
                           <input
                             type="text"
@@ -123,7 +141,9 @@
                         </div>
                         <div class="form-group form-margin">
                           <label for="exampleInputPassword1" class="input-title"
-                            ><strong>Description</strong></label
+                            ><strong data-i18n="description"
+                              >Description</strong
+                            ></label
                           >
                           <textarea
                             class="form-control"
@@ -135,21 +155,29 @@
                         </div>
                         <div class="form-group form-margin">
                           <label for="exampleInputPassword1" class="input-title"
-                            ><strong>Complaint Category</strong></label
+                            ><strong data-i18n="complaintCategory"
+                              >Complaint Category</strong
+                            ></label
                           >
                           <select
                             class="form-select form-margin"
                             required
                             name="category"
                           >
-                            <option value="public" selected>Public</option>
-                            <option value="private">Private</option>
+                            <option value="public" selected data-i18n="public">
+                              Public
+                            </option>
+                            <option value="private" data-i18n="private">
+                              Private
+                            </option>
                           </select>
                         </div>
 
                         <div class="form-group form-margin">
                           <label class="input-title"
-                            ><strong>Upload Images</strong></label
+                            ><strong data-i18n="uploadImages"
+                              >Upload Images</strong
+                            ></label
                           >
                           <input
                             type="file"
@@ -160,7 +188,11 @@
                         </div>
 
                         <div class="form-group mt-3 text-center">
-                          <button type="submit" class="btn btn-primary">
+                          <button
+                            type="submit"
+                            class="btn btn-primary"
+                            data-i18n="submit"
+                          >
                             Submit
                           </button>
                         </div>
@@ -173,8 +205,14 @@
                 <div class="card custom-card">
                   <div class="card-body">
                     <div class="flex-it">
-                      <h4 class="card-title">Latest complaints</h4>
-                      <a href="./complaint" class="table-complaint-list">
+                      <h4 class="card-title" data-i18n="latestComplaints">
+                        Latest complaints
+                      </h4>
+                      <a
+                        href="./complaint"
+                        class="table-complaint-list"
+                        data-i18n="viewAll"
+                      >
                         View all</a
                       >
                     </div>
@@ -182,10 +220,10 @@
                       <table>
                         <thead>
                           <tr>
-                            <th>No</th>
-                            <th>complaint Title</th>
-                            <th>Status</th>
-                            <th>Date</th>
+                            <th data-i18n="no">No</th>
+                            <th data-i18n="complaintTitle">complaint Title</th>
+                            <th data-i18n="status">Status</th>
+                            <th data-i18n="date">Date</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -296,5 +334,6 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+    <script src="../../js/script.js"></script>
   </body>
 </html>

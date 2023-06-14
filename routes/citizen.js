@@ -10,6 +10,7 @@ const { default: mongoose, get } = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const JWT_SECRET = "hgfhd6ej4jhF3";
 const nodemailer = require("nodemailer");
+const comment = require("../models/comment");
 
 router.use(
   fileUpload({
@@ -53,11 +54,16 @@ router.get("/complaint", jwtTokenAuth, async (req, res) => {
 
 router.get("/details/:id", jwtTokenAuth, async (req, res) => {
   try {
+    let allComment = await comment
+      .find({ complaintId: req.params.id })
+      .populate("userid");
+    console.log(allComment);
     let all = await Complaint.findById(req.params.id);
     res.render("citizen/detail", {
       payload: all,
       userName: req.cookies.user,
       userid: req.cookies.userID,
+      allComment: allComment,
     });
   } catch (error) {
     // Handle the exception
@@ -378,5 +384,34 @@ router.post("/reset-password/:id/:token", async (req, res) => {
     res.send("Something went wrong");
   }
 });
+
+router.post("/:complaintid/addcomment", async (req, res) => {
+  let complaintId = req.params.complaintid;
+  let comm = new comment({
+    complaintId: complaintId,
+    message: req.body.comment,
+    userid: req.cookies.userID,
+  });
+  await comm.save();
+  res.redirect("/");
+});
+
+router.post(
+  "/:complaintid/:commentid/:userid/replycomment",
+  async (req, res) => {
+    let { complaintId, commentid, userid } = req.params;
+    let comm = await comment.findByIdAndUpdate(commentid, {
+      $push: {
+        reply: {
+          message: req.body.reply,
+          userid: userid,
+          username: req.cookies.user,
+        },
+      },
+    });
+    await comm.save();
+    res.redirect("/");
+  }
+);
 
 module.exports = router;

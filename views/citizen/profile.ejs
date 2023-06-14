@@ -18,25 +18,35 @@
     <title>Profile</title>
   </head>
   <body>
+    <% if(userName){%>
     <div class="sidenav">
       <button class="toggle-btn" onclick="toggleNav()">CMS</button>
       <ul id="navItems">
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/complaint">Complaints</a></li>
-        <li><a href="/logout">Logout</a></li>
+        <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
+        <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
+        <li><a href="/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
+    <%}%>
     <div class="main-content">
       <nav class="navbar navbar-expand-lg bg-light swornim prajita">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">Complaint Management System</a>
 
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="/profile/<%=userid %>" class="user-badge"
-                ><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name"><%=userName %></span>
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="/profile/<%=userid %>" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name"><%=userName %></span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
         </div>
       </nav>
@@ -44,7 +54,7 @@
         <div class="container">
           <% if((realuserid == userid)||(isAdmin)){ %>
           <div>
-            <h1>Profile</h1>
+            <h1 data-i18n="profile">Profile</h1>
           </div>
           <div class="form-complaint">
             <div class="row">
@@ -54,19 +64,19 @@
                     <div class="profile">
                       <table>
                         <tr>
-                          <th>Name</th>
+                          <th data-i18n="name">Name</th>
                           <td><%=userdata.fullname %></td>
                         </tr>
                         <tr>
-                          <th>E-mail</th>
+                          <th data-i18n="email">E-mail</th>
                           <td><%=userdata.email %></td>
                         </tr>
                         <tr>
-                          <th>Phone Number</th>
+                          <th data-i18n="phoneNumber">Phone Number</th>
                           <td><%=userdata.phonenumber %></td>
                         </tr>
                         <tr>
-                          <th>Address</th>
+                          <th data-i18n="address">Address</th>
                           <td><%=userdata.address %></td>
                         </tr>
                       </table>
@@ -88,7 +98,7 @@
                     <div class="profile">
                       <table>
                         <tr>
-                          <th>Name</th>
+                          <th data-i18n="name">Name</th>
                           <td><%=userdata.fullname %></td>
                         </tr>
                       </table>
@@ -100,7 +110,7 @@
           </div>
           <%}%>
           <div>
-            <h1>User's Complaints</h1>
+            <h1 data-i18n="userComplaints">User's Complaints</h1>
           </div>
           <div class="form-complaint">
             <div class="row">
@@ -170,5 +180,6 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+    <script src="../../js/script.js"></script>
   </body>
 </html>

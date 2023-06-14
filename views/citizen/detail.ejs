@@ -18,26 +18,36 @@
     <title>Compalints</title>
   </head>
   <body>
-    <div class="sidenav">
-      <button class="toggle-btn" onclick="toggleNav()">CMS</button>
-      <ul id="navItems">
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/complaint">Complaints</a></li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
-    </div>
+    <% if(userName){%>
+      <div class="sidenav">
+        <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+        <ul id="navItems">
+          <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
+          <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
+          <li><a href="/logout" data-i18n="logout">Logout</a></li>
+        </ul>
+      </div>
+      <%}%>
 
     <div class="main-content">
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
           <a class="navbar-brand" href="/">Complaint Management System</a>
 
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="/profile/<%=userid %>" class="user-badge"
-                ><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name"><%=userName %></span>
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="/profile/<%=userid %>" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name"><%=userName %></span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
         </div>
       </nav>
@@ -106,7 +116,7 @@
               </div>
             </div>
             <div class="col-md-4">
-              <h3>Complaint Status</h3>
+              <h3 data-i18n="status">Complaint Status</h3>
               <div class="timeline">
                 <div class="outer">
                   <% payload.statusmessege.forEach(messege=>{%>
@@ -117,107 +127,99 @@
                 </div>
               </div>
             </div>
-            <div class="comment-thread">
-              <!-- Comment 1 start -->
-              <details open class="comment" id="comment-1">
-                <a href="#comment-1" class="comment-border-link">
-                  <span class="sr-only">Jump to comment-1</span>
-                </a>
-                <summary>
-                  <div class="comment-heading">
-                    <div class="comment-info">
-                      <a href="#" class="comment-author">someguy14</a>
-                    </div>
-                  </div>
-                </summary>
-
-                <div class="comment-body">
-                  <p>
-                    This is really great! I fully agree with what you wrote, and
-                    this is sure to help me out in the future. Thank you for
-                    posting this.
-                  </p>
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-toggle="reply-form"
-                    data-target="comment-1-reply-form"
-                  >
-                    Reply
-                  </button>
-
-                  <!-- Reply form start -->
-                  <form
-                    method="POST"
-                    class="reply-form d-none"
-                    id="comment-1-reply-form"
-                  >
-                    <textarea
-                      placeholder="Reply to comment"
-                      rows="4"
-                    ></textarea>
-                    <button type="submit">Submit</button>
-                    <button
-                      type="button"
-                      data-toggle="reply-form"
-                      data-target="comment-1-reply-form"
-                    >
-                      Cancel
-                    </button>
+            <div class="row">
+              <div class="col-md-12">
+                
+                <div class="comment-thread mt-4">
+                  <strong>Comment</strong>
+                  <form action="/<%=payload._id %>/addcomment" method="post">
+                    <textarea name="comment" class="form-control"></textarea>
+                    <button type="submit"class="mt-3 btn btn-primary"> Submit</button>
                   </form>
-                  <!-- Reply form end -->
-                </div>
-
-                <div class="replies">
-                  <!-- Comment 2 start -->
-                  <details open class="comment" id="comment-2">
-                    <a href="#comment-2" class="comment-border-link">
-                      <span class="sr-only">Jump to comment-2</span>
-                    </a>
-                    <summary>
-                      <div class="comment-heading">
-                        <div class="comment-info">
-                          <a href="#" class="comment-author">randomperson81</a>
+                  <!-- Comment 1 start -->
+                  <% allComment.forEach(comment =>{%>
+                    <details open class="comment" id="comment-1">
+                      <a href="#comment-1" class="comment-border-link">
+                        <span class="sr-only">Jump to comment-1</span>
+                      </a>
+                      <summary>
+                        <div class="comment-heading">
+                          <div class="comment-info">
+                            <a href="/profile/<%=comment.userid?._id %>" class="comment-author"><%=comment.userid?.fullname %></a>
+                          </div>
                         </div>
-                      </div>
-                    </summary>
-
-                    <div class="comment-body">
-                      <p>Took the words right out of my mouth!</p>
-                      <button
-                        type="button"
-                        class="btn btn-primary"
-                        data-toggle="reply-form"
-                        data-target="comment-2-reply-form"
-                      >
-                        Reply
-                      </button>
-
-                      <!-- Reply form start -->
-                      <form
-                        method="POST"
-                        class="reply-form d-none"
-                        id="comment-2-reply-form"
-                      >
-                        <textarea
-                          placeholder="Reply to comment"
-                          rows="4"
-                        ></textarea>
-                        <button type="submit">Submit</button>
+                      </summary>
+      
+                      <div class="comment-body">
+                        <p>
+                          <%=comment.message %>
+                        </p>
                         <button
                           type="button"
+                          class="btn btn-primary"
                           data-toggle="reply-form"
-                          data-target="comment-2-reply-form"
+                          data-target="<%=comment._id %>"
                         >
-                          Cancel
+                          Reply
                         </button>
-                      </form>
-                      <!-- Reply form end -->
-                    </div>
-                  </details>
+      
+                        <!-- Reply form start -->
+                        <form
+                          method="POST"
+                          class="reply-form d-none"
+                          id="<%=comment._id %>"
+                          action="/<%=payload._id %>/<%=comment._id %>/<%=userid  %>/replycomment"
+                        >
+                          <textarea
+                            placeholder="Reply to comment"
+                            rows="4"
+                            class="form-control"
+                            name="reply"
+                          ></textarea>
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <button
+                            type="button"
+                            data-toggle="reply-form"
+                            data-target="<%=comment._id %>"
+                            class="btn btn-primary"
+                          >
+                            Cancel
+                          </button>
+                        </form>
+                        <!-- Reply form end -->
+                      </div>
+                    <% if(comment.reply){                      
+                      comment.reply.forEach(r=>{%>
+                        <div class="replies">
+                          <!-- Comment 2 start -->
+                          <details open class="comment" id="comment-2">
+                            <a href="#comment-2" class="comment-border-link">
+                              <span class="sr-only">Jump to comment-2</span>
+                            </a>
+                            <summary>
+                              <div class="comment-heading">
+                                <div class="comment-info">
+                                  <a href="/profile/<%= r.userid %>" class="comment-author"><%= r.username %></a>
+                                </div>
+                              </div>
+                            </summary>
+        
+                            <div class="comment-body">
+                              <p><%=r.message %></p>
+        
+                              <!-- Reply form end -->
+                            </div>
+                          </details>
+                        </div>
+
+                        <%})%>
+                      
+                    <%}%>  
+                    </details>
+                  <%})%>
+                  <!-- Comment 1 end -->
                 </div>
-              </details>
-              <!-- Comment 1 end -->
+              </div>
             </div>
           </div>
         </div>
@@ -271,5 +273,6 @@
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
+    <script src="../../js/script.js"></script>
   </body>
 </html>
