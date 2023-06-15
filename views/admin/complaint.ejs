@@ -23,21 +23,30 @@
         CMS
       </button>
       <ul id="navItems">
-        <li><a href="/admin/dashboard">Dashboard</a></li>
-        <li><a href="/admin/complaint">Complaints</a></li>
-        <li><a href="/admin/logout">Logout</a></li>
+        <li><a href="/admin/dashboard" data-i18n="dashboard">Dashboard</a></li>
+        <li><a href="/admin/complaint" data-i18n="complaints">Complaints</a></li>
+        <li><a href="/admin/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
     <div class="main-content">
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/admin/dashboard">Complaint Management System</a>
-  
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="#" class="user-badge"><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name">Admin</span>
+          <a class="navbar-brand" href="/">Complaint Management System</a>
+
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="#" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name">Admin</span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
         </div>
       </nav>
@@ -49,17 +58,17 @@
                 <div class="card custom-card">
                   <div class="card-body">
                     <div class="flex-it">
-                      <h4 class="card-title">All Complaints</h4>
+                      <h4 class="card-title" data-i18n="allComplaints">All Complaints</h4>
                       <select
                         class="form-select form-margin complaint-page-select"
                         aria-label=".form-select-lg example"
                         id="search"
                         onchange="fetchdat()"
                       >
-                        <option value="All" selected>All</option>
-                        <option value="Success">Success</option>
-                        <option value="Progress">Progress</option>
-                        <option value="Queue">Queue</option>
+                        <option value="All" selected data-i18n="all">All</option>
+                        <option value="Success" data-i18n="success">Success</option>
+                        <option value="Progress" data-i18n="progress">Progress</option>
+                        <option value="Queue" data-i18n="queue">Queue</option>
                       </select>
                     </div>
                     <div class="">
@@ -67,11 +76,11 @@
                       <table class="table-detail">
                         <thead>
                           <tr>
-                            <th style="width: 5%">No</th>
-                            <th>Complain Title</th>
-                            <th>Status</th>
-                            <th>Category</th>
-                            <th>Date</th>
+                            <th style="width: 5%" data-i18n="no">No</th>
+                            <th data-i18n="complaintTitle">Complaint Title</th>
+                            <th data-i18n="status">Status</th>
+                            <th data-i18n="complaintCategory">Complaint Category</th>
+                            <th data-i18n="date">Date</th>
                           </tr>
                         </thead>
                         <tbody>

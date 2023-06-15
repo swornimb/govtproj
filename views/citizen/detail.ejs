@@ -72,6 +72,11 @@
                           <%=payload.username %></a
                         >
                       </div>
+                      <div class="date">
+                        <span
+                          ><i class="fa-solid fa-spinner"></i></span>
+                        <%=payload.status %>
+                      </div>
                     </div>
                     <% if(payload.status=='Queue'){%>
                     <div
@@ -132,10 +137,13 @@
                 
                 <div class="comment-thread mt-4">
                   <strong>Comment</strong>
-                  <form action="/<%=payload._id %>/addcomment" method="post">
-                    <textarea name="comment" class="form-control"></textarea>
-                    <button type="submit"class="mt-3 btn btn-primary"> Submit</button>
-                  </form>
+                  <% if((payload.userId==userid)||isAdmin){%>
+                    <form action="/<%=payload._id %>/addcomment" method="post">
+                      <textarea name="comment" class="form-control" required></textarea>
+                      <button type="submit"class="mt-3 btn btn-primary"> Submit</button>
+                    </form>
+                  <%} %>
+                  
                   <!-- Comment 1 start -->
                   <% allComment.forEach(comment =>{%>
                     <details open class="comment" id="comment-1">
@@ -154,6 +162,7 @@
                         <p>
                           <%=comment.message %>
                         </p>
+                        <% if((payload.userId==userid)||isAdmin){%>
                         <button
                           type="button"
                           class="btn btn-primary"
@@ -168,6 +177,7 @@
                           method="POST"
                           class="reply-form d-none"
                           id="<%=comment._id %>"
+                          
                           action="/<%=payload._id %>/<%=comment._id %>/<%=userid  %>/replycomment"
                         >
                           <textarea
@@ -175,6 +185,7 @@
                             rows="4"
                             class="form-control"
                             name="reply"
+                            required
                           ></textarea>
                           <button type="submit" class="btn btn-primary">Submit</button>
                           <button
@@ -186,6 +197,7 @@
                             Cancel
                           </button>
                         </form>
+                        <%} %>
                         <!-- Reply form end -->
                       </div>
                     <% if(comment.reply){                      

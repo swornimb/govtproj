@@ -21,24 +21,32 @@
     <div class="sidenav">
       <button class="toggle-btn" onclick="toggleNav()">CMS</button>
       <ul id="navItems">
-        <li><a href="/admin/dashboard">Dashboard</a></li>
-        <li><a href="/admin/complaint">Complaints</a></li>
-        <li><a href="/admin/logout">Logout</a></li>
+        <li><a href="/admin/dashboard" data-i18n="dashboard">Dashboard</a></li>
+        <li>
+          <a href="/admin/complaint" data-i18n="complaints">Complaints</a>
+        </li>
+        <li><a href="/admin/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
     <div class="main-content">
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/admin/dashboard"
-            >Complaint Management System</a
-          >
+          <a class="navbar-brand" href="/">Complaint Management System</a>
 
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="#" class="user-badge"
-                ><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name">Admin</span>
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="#" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name">Admin</span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
         </div>
       </nav>
@@ -48,8 +56,10 @@
             <div class="col-md-3">
               <div class="card" id="registered">
                 <div class="card-body">
-                  <h6 class="card-title">Total complaint</h6>
-                  <h3>10,000</h3>
+                  <h6 class="card-title" data-i18n="totalComplaint">
+                    Total complaint
+                  </h6>
+                  <h3><%=everyData %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-list-check"></i>
                   </div>
@@ -59,8 +69,10 @@
             <div class="col-md-3">
               <div class="card" id="queue">
                 <div class="card-body">
-                  <h6 class="card-title">complaint in Queue</h6>
-                  <h3>4,000</h3>
+                  <h6 class="card-title" data-i18n="complaintsQueue">
+                    Complaint in Queue
+                  </h6>
+                  <h3><%=queueData %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-lines-leaning"></i>
                   </div>
@@ -70,8 +82,10 @@
             <div class="col-md-3">
               <div class="card" id="progress">
                 <div class="card-body">
-                  <h6 class="card-title">Complaint in Progress</h6>
-                  <h3>10,000</h3>
+                  <h6 class="card-title" data-i18n="complaintsProgress">
+                    Complaint in Progress
+                  </h6>
+                  <h3><%=progressData %></h3>
                   <div class="card-icon">
                     <i class="fa-sharp fa-solid fa-spinner"></i>
                   </div>
@@ -81,8 +95,8 @@
             <div class="col-md-3">
               <div class="card" id="completed">
                 <div class="card-body">
-                  <h6 class="card-title">Completed</h6>
-                  <h3>2,000</h3>
+                  <h6 class="card-title" data-i18n="completed">Completed</h6>
+                  <h3><%=successData %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-check"></i>
                   </div>
@@ -96,8 +110,14 @@
                 <div class="card custom-card">
                   <div class="card-body">
                     <div class="flex-it">
-                      <h4 class="card-title">Latest Complaints</h4>
-                      <a href="./complaint" class="table-complaint-list">
+                      <h4 class="card-title" data-i18n="latestComplaints">
+                        Latest Complaints
+                      </h4>
+                      <a
+                        href="./complaint"
+                        class="table-complaint-list"
+                        data-i18n="viewAll"
+                      >
                         View all</a
                       >
                     </div>
@@ -105,11 +125,13 @@
                       <table>
                         <thead>
                           <tr>
-                            <th>No</th>
-                            <th>Complaint Title</th>
-                            <th>Status</th>
-                            <th>Category</th>
-                            <th>Date</th>
+                            <th data-i18n="no">No</th>
+                            <th data-i18n="complaintTitle">Complaint Title</th>
+                            <th data-i18n="status">Status</th>
+                            <th data-i18n="complaintCategory">
+                              Complaint Category
+                            </th>
+                            <th data-i18n="date">Date</th>
                           </tr>
                         </thead>
                         <tbody>

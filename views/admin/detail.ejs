@@ -21,24 +21,30 @@
     <div class="sidenav">
       <button class="toggle-btn" onclick="toggleNav()">CMS</button>
       <ul id="navItems">
-        <li><a href="/admin/dashboard">Dashboard</a></li>
-        <li><a href="/admin/complaint">Complaints</a></li>
-        <li><a href="/admin/logout">Logout</a></li>
+        <li><a href="/admin/dashboard" data-i18n="dashboard">Dashboard</a></li>
+        <li><a href="/admin/complaint" data-i18n="complaints">Complaints</a></li>
+        <li><a href="/admin/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
     <div class="main-content">
       <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/admin/dashboard"
-            >Complaint Management System</a
-          >
+          <a class="navbar-brand" href="/">Complaint Management System</a>
 
-          <div class="text-align" id="navbarTogglerDemo02">
-            <span
-              ><a href="#" class="user-badge"
-                ><i class="fa-solid fa-user"></i></a
-            ></span>
-            <span class="user-name">Admin</span>
+          <div class="text-align nav-right" id="navbarTogglerDemo02">
+            <div>
+              <span
+                ><a href="#" class="user-badge"
+                  ><i class="fa-solid fa-user"></i></a
+              ></span>
+              <span class="user-name">Admin</span>
+            </div>
+            <div>
+              <select id="languageSelect" onchange="translatePageContent(this)">
+                <option value="en">EN</option>
+                <option value="ne">NP</option>
+              </select>
+            </div>
           </div>
         </div>
       </nav>
@@ -58,18 +64,16 @@
                           <span><i class="fa-solid fa-calendar-days"></i></span>
                           4 days ago
                         </div>
-                        <div class="date">
+                        <div class="name date">
                           <span
                             ><a href="/profile/<%=payload.userId %>"
-                              ><i class="fa-solid fa-user"></i></a
+                              ><i class="fa-solid fa-user"></i><%=payload.username %></a
                           ></span>
-                          <%=payload.username %>
+                          
                         </div>
                         <div class="date">
                           <span
-                            ><a href="/profile/<%=payload.userId %>"
-                              ><i class="fa-solid fa-spinner"></i></a
-                          ></span>
+                            ><i class="fa-solid fa-spinner"></i></span>
                           <%=payload.status %>
                         </div>
                       </div>
@@ -90,11 +94,105 @@
                     <%}else{%> No Image <%}%>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    
+                    <div class="comment-thread mt-4">
+                      <strong data-i18n="comments">Comment</strong>
+                      <form action="/<%=payload._id %>/addcomment" method="post">
+                        <textarea name="comment" class="form-control"></textarea>
+                        <button type="submit"class="mt-3 btn btn-primary"> Submit</button>
+                      </form>
+                      <!-- Comment 1 start -->
+                      <% allComment.forEach(comment =>{%>
+                        <details open class="comment" id="comment-1">
+                          <a href="#comment-1" class="comment-border-link">
+                            <span class="sr-only">Jump to comment-1</span>
+                          </a>
+                          <summary>
+                            <div class="comment-heading">
+                              <div class="comment-info">
+                                <a href="/profile/<%=comment.userid?._id %>" class="comment-author"><%=comment.userid?.fullname %></a>
+                              </div>
+                            </div>
+                          </summary>
+          
+                          <div class="comment-body">
+                            <p>
+                              <%=comment.message %>
+                            </p>
+                            <button
+                              type="button"
+                              class="btn btn-primary"
+                              data-toggle="reply-form"
+                              data-target="<%=comment._id %>"
+                            >
+                              Reply
+                            </button>
+          
+                            <!-- Reply form start -->
+                            <form
+                              method="POST"
+                              class="reply-form d-none"
+                              id="<%=comment._id %>"
+                              action="/<%=payload._id %>/<%=comment._id %>/<%=userid  %>/replycomment"
+                            >
+                              <textarea
+                                placeholder="Reply to comment"
+                                rows="4"
+                                class="form-control"
+                                name="reply"
+                              ></textarea>
+                              <button type="submit" class="btn btn-primary">Submit</button>
+                              <button
+                                type="button"
+                                data-toggle="reply-form"
+                                data-target="<%=comment._id %>"
+                                class="btn btn-primary"
+                              >
+                                Cancel
+                              </button>
+                            </form>
+                            <!-- Reply form end -->
+                          </div>
+                        <% if(comment.reply){                      
+                          comment.reply.forEach(r=>{%>
+                            <div class="replies">
+                              <!-- Comment 2 start -->
+                              <details open class="comment" id="comment-2">
+                                <a href="#comment-2" class="comment-border-link">
+                                  <span class="sr-only">Jump to comment-2</span>
+                                </a>
+                                <summary>
+                                  <div class="comment-heading">
+                                    <div class="comment-info">
+                                      <a href="/profile/<%= r.userid %>" class="comment-author"><%= r.username %></a>
+                                    </div>
+                                  </div>
+                                </summary>
+            
+                                <div class="comment-body">
+                                  <p><%=r.message %></p>
+            
+                                  <!-- Reply form end -->
+                                </div>
+                              </details>
+                            </div>
+      
+                            <%})%>
+                          
+                        <%}%>  
+                        </details>
+                      <%})%>
+                      <!-- Comment 1 end -->
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="col-md-4">
                 <div class="card-body">
                   <div class="detail-title">
-                    <strong> Action Panel </strong>
+                    <strong data-i18n="actionPanel"> Action Panel </strong>
                   </div>
                   <div class="detail-body">
                     <form
@@ -104,7 +202,7 @@
                     >
                       <div class="form-group">
                         <div class="progress_popup w-100">
-                          <label>Title</label>
+                          <label data-i18n="title">Title</label>
                           <input
                             type="text"
                             name="title"
@@ -113,11 +211,11 @@
                           />
                         </div>
                         <div class="progress_popup w-100 my-2">
-                          <label>Description</label>
+                          <label data-i18n="description">Description</label>
                           <textarea class="form-control" name="description"><%= payload.description %></textarea>
                         </div>
                         <div class="progress_popup w-100 my-2">
-                          <label>Status</label>
+                          <label data-i18n="status">Status</label>
                           <select
                             name="status"
                             id="action"
@@ -125,9 +223,9 @@
                             required
                             onchange="progresspopup()"
                           >
-                            <option value="Queue"<% if(payload.status =="Queue" ){%>selected <%} %>>Queue</option>
-                            <option value="Progress"<% if(payload.status =="Progress" ){%>selected <%} %>>Progress</option>
-                            <option value="Success"<% if(payload.status =="Success" ){%>selected <%} %>>Success</option>
+                            <option value="Queue"<% if(payload.status =="Queue" ){%>selected <%} %> data-i18n="queue">Queue</option>
+                            <option value="Progress"<% if(payload.status =="Progress" ){%>selected <%} %>data-i18n="progress"> Progress</option>
+                            <option value="Success"<% if(payload.status =="Success" ){%>selected <%} %> data-i18n="success">Success</option>
                           </select>
                         </div>
 
@@ -147,7 +245,7 @@
                             />
                             <div class="rangeValue" id="rangeValue"><%=payload.statusbar %></div>
                           </div>
-                          <label>Status Messege</label>
+                          <label data-i18n="statusMessage">Status Messege</label>
                           <div class="timeline">
                           <div class="outer">
                             <% payload.statusmessege.forEach(messege=>{%>
@@ -163,6 +261,7 @@
                             id="p_pup_desc"
                             placeholder="Status Messege"
                             name="progressmessege"
+                            
                             required
                           />
                         </div>
@@ -176,6 +275,7 @@
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>

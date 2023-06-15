@@ -61,6 +61,7 @@ router.get("/details/:id", jwtTokenAuth, async (req, res) => {
     let all = await Complaint.findById(req.params.id);
     res.render("citizen/detail", {
       payload: all,
+      isAdmin: req.cookies.admin,
       userName: req.cookies.user,
       userid: req.cookies.userID,
       allComment: allComment,
@@ -234,6 +235,9 @@ router.post("/login", async (req, res) => {
             expiresIn: 3600,
           }); // Env variable for key
           res.cookie("admin", token, {
+            httpOnly: true,
+          });
+          res.cookie("adminID", loginUser._id, {
             httpOnly: true,
           });
           res.redirect("/admin/dashboard");

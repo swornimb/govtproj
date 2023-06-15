@@ -31,6 +31,11 @@ const translations = {
     phoneNumber: "Phone Number",
     address: "Address",
     userComplaints: "User's Complaints",
+    latestComplaints: "Latest Complaints",
+    actionPanel: "Action Panel",
+    comments: "Comments",
+    title: "Title",
+    statusMessage: "Status Message",
   },
   ne: {
     dashboard: "ड्यासबोर्ड",
@@ -64,6 +69,11 @@ const translations = {
     phoneNumber: "फोन नम्बर",
     address: "ठेगाना",
     userComplaints: "प्रयोगकर्ताको गुनासोहरू",
+    latestComplaints: "नवीनतम गुनासोहरू",
+    actionPanel: "कार्य पैनल",
+    comments: "टिप्पणीहरू",
+    title: "शीर्षक",
+    statusMessage: "स्थिति सन्देश",
   },
 };
 
