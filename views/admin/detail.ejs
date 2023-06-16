@@ -22,7 +22,12 @@
       <button class="toggle-btn" onclick="toggleNav()">CMS</button>
       <ul id="navItems">
         <li><a href="/admin/dashboard" data-i18n="dashboard">Dashboard</a></li>
-        <li><a href="/admin/complaint" data-i18n="complaints">Complaints</a></li>
+        <li>
+          <a href="/admin/complaint" data-i18n="complaints">Complaints</a>
+        </li>
+        <li>
+          <a href="/admin/type" data-i18n="complaints">Add Type</a>
+        </li>
         <li><a href="/admin/logout" data-i18n="logout">Logout</a></li>
       </ul>
     </div>
@@ -110,10 +115,12 @@
                             <span class="sr-only">Jump to comment-1</span>
                           </a>
                           <summary>
-                            <div class="comment-heading">
-                              <div class="comment-info">
-                                <a href="/profile/<%=comment.userid?._id %>" class="comment-author"><%=comment.userid?.fullname %></a>
-                              </div>
+                            <div class="comment-info">
+                              <a href="<% if(comment.userid?.fullname){ %>/profile/<%=comment.userid?._id %><%}else{%>#<%}%>" class="comment-author"><% if(comment.userid?.fullname){ %>
+                                <%=comment.userid?.fullname %>
+                              <%}else{%>
+                                Admin
+                              <%}%></a>
                             </div>
                           </summary>
           
@@ -178,9 +185,7 @@
                                 </div>
                               </details>
                             </div>
-      
                             <%})%>
-                          
                         <%}%>  
                         </details>
                       <%})%>
@@ -189,7 +194,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 ">
                 <div class="card-body">
                   <div class="detail-title">
                     <strong data-i18n="actionPanel"> Action Panel </strong>
@@ -202,7 +207,7 @@
                     >
                       <div class="form-group">
                         <div class="progress_popup w-100">
-                          <label data-i18n="title">Title</label>
+                          <label data-i18n="title"><strong>Title</strong></label>
                           <input
                             type="text"
                             name="title"
@@ -211,11 +216,11 @@
                           />
                         </div>
                         <div class="progress_popup w-100 my-2">
-                          <label data-i18n="description">Description</label>
+                          <label data-i18n="description"><strong>Description</strong></label>
                           <textarea class="form-control" name="description"><%= payload.description %></textarea>
                         </div>
                         <div class="progress_popup w-100 my-2">
-                          <label data-i18n="status">Status</label>
+                          <label data-i18n="status"><strong>Status</strong></label>
                           <select
                             name="status"
                             id="action"
@@ -245,16 +250,8 @@
                             />
                             <div class="rangeValue" id="rangeValue"><%=payload.statusbar %></div>
                           </div>
-                          <label data-i18n="statusMessage">Status Messege</label>
-                          <div class="timeline">
-                          <div class="outer">
-                            <% payload.statusmessege.forEach(messege=>{%>
-                              <div class="statuscard">
-                                <h6 class="title"><%=messege%></p></h6>
-                              </div>
-                            <%}) %>
-                          </div>
-                        </div>
+                          <label data-i18n="statusMessage"><strong> Messege</strong></label>
+                          
                           <input
                             type="text"
                             class="form-control"
@@ -264,9 +261,34 @@
                             
                             required
                           />
+                          <div class="timeline">
+                            <div class="outer">
+                              <% payload.statusmessege.forEach(messege=>{%>
+                                <div class="statuscard">
+                                  <h6 class="title"><%=messege%></p></h6>
+                                </div>
+                              <%}) %>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <button type="submit" class="btn btn-success mt-3">
+                      <div class="form-group form-margin">
+                        <label class="input-title"
+                          ><strong data-i18n="areaOfComplaint"
+                            >Area Of Complaint</strong
+                          ></label
+                        >
+                        <select
+                            class="form-select form-margin"
+                            required
+                            name="area"
+                          >
+                        <% database.forEach(data=>{%>
+                          <option value="<%=data.type%>" <% if(payload.area == data.type ){%>selected <%} %>><%=data.type%></option>
+                        <%})%>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn btn-success">
                         Submit
                       </button>
                     </form>

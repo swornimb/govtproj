@@ -3,26 +3,45 @@ const Complaint = require("../models/complaint");
 const { jwtTokenAuthAdmin } = require("../middleware/jwtTokenAuthAdmin");
 const { ObjectId } = require("mongodb");
 const comment = require("../models/comment");
+const type = require("../models/type");
 const router = express.Router();
 
 // ------------------------------GET---------------------------------
-
+router.get("/type", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    let database = await type.find();
+    res.render("admin/addCategory", { database: database });
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
   try {
+    let database = await type.find();
     let status = req.query.status;
-    if (!status) {
-      var all = await Complaint.find({ category: "public" }).sort({
+    let area = req.query.area;
+    console.log(area);
+    if (area) {
+      var all = await Complaint.find({
+        area: area,
+      }).sort({
         _id: -1,
       });
-    } else {
+      console.log(all);
+    } else if (status) {
       var all = await Complaint.find({
-        category: "public",
         status: status,
       }).sort({
         _id: -1,
       });
+    } else {
+      var all = await Complaint.find().sort({
+        _id: -1,
+      });
     }
-    res.render("admin/complaint", { payload: all });
+    res.render("admin/complaint", { payload: all, database: database });
   } catch (error) {
     // Handle the exception
     console.error(error);
@@ -32,6 +51,7 @@ router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
 
 router.get("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
   try {
+    let database = await type.find();
     let allComment = await comment
       .find({ complaintId: req.params.id })
       .populate("userid");
@@ -42,6 +62,7 @@ router.get("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
       userName: "Admin",
       userid: req.cookies.adminID,
       allComment: allComment,
+      database: database,
     });
   } catch (error) {
     // Handle the exception
@@ -87,10 +108,30 @@ router.post("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
       statusbar: req.body.progressbar,
       $push: { statusmessege: req.body.progressmessege },
       status: req.body.status,
+      area: req.body.area,
     });
     all.save();
     console.log(all);
     res.redirect("/admin/dashboard");
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.post("/type", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    let area = req.body.carea;
+    area = area.toLowerCase();
+    console.log(area);
+    let database = await type.find();
+    console.log(database);
+    let addType = new type({
+      type: area,
+    });
+    addType.save();
+    res.redirect("/admin/type");
   } catch (error) {
     // Handle the exception
     console.error(error);

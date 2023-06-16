@@ -45,5 +45,8 @@ const complaintSchema = mongoose.Schema({
     ref: "user",
     required: true,
   },
+  area: {
+    type: String,
+  },
 });
 module.exports = mongoose.model("complaints", complaintSchema);

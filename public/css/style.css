@@ -49,6 +49,9 @@
 .form-complaint {
   margin: 20px 0px;
 }
+.form-select {
+  text-transform: capitalize;
+}
 .form-margin {
   margin: 0px 0px 10px 0px;
 }
@@ -401,12 +404,6 @@ details.comment:not([open]) .comment-heading {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.55);
 }
-details.comment[open] .comment-heading::after {
-  content: "Click to hide";
-}
-details.comment:not([open]) .comment-heading::after {
-  content: "Click to show";
-}
 
 /* Adjustment for Internet Explorer */
 
@@ -446,7 +443,6 @@ details.comment:not([open]) .comment-heading::after {
 .timeline {
   background: var(--primary-color);
   margin: 20px auto;
-  padding: 20px;
 }
 
 /* Outer Layer with the timeline border */
@@ -493,4 +489,11 @@ details.comment:not([open]) .comment-heading::after {
 #languageSelect {
   background: none;
   border: none;
+}
+.status-messages {
+  text-align: center;
+  color: #1aa57c;
+}
+.table-detail {
+  text-transform: capitalize;
 }

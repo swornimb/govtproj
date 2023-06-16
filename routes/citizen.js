@@ -59,10 +59,11 @@ router.get("/details/:id", jwtTokenAuth, async (req, res) => {
       .populate("userid");
     console.log(allComment);
     let all = await Complaint.findById(req.params.id);
+    console.log(allComment);
     res.render("citizen/detail", {
       payload: all,
       isAdmin: req.cookies.admin,
-      userName: req.cookies.user,
+      userName: req.cookies.user || "Admin",
       userid: req.cookies.userID,
       allComment: allComment,
     });
@@ -397,13 +398,13 @@ router.post("/:complaintid/addcomment", async (req, res) => {
     userid: req.cookies.userID,
   });
   await comm.save();
-  res.redirect("/");
+  res.redirect(`/details/${complaintId}`);
 });
 
 router.post(
   "/:complaintid/:commentid/:userid/replycomment",
   async (req, res) => {
-    let { complaintId, commentid, userid } = req.params;
+    let { complaintid, commentid, userid } = req.params;
     let comm = await comment.findByIdAndUpdate(commentid, {
       $push: {
         reply: {
@@ -414,7 +415,7 @@ router.post(
       },
     });
     await comm.save();
-    res.redirect("/");
+    res.redirect(`/details/${complaintid}`);
   }
 );
 

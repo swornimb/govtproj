@@ -54,7 +54,7 @@
       <div class="dashboard">
         <div class="container">
           <div class="form-complaint row">
-            <div class="detail-card col-md-8">
+            <div class="detail-card col-md-9">
               <div class="card-body">
                 <div class="detail-title">
                   <strong> <%=payload.title %> </strong>
@@ -120,7 +120,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3 status-messages">
               <h3 data-i18n="status">Complaint Status</h3>
               <div class="timeline">
                 <div class="outer">
@@ -153,7 +153,11 @@
                       <summary>
                         <div class="comment-heading">
                           <div class="comment-info">
-                            <a href="/profile/<%=comment.userid?._id %>" class="comment-author"><%=comment.userid?.fullname %></a>
+                            <a href="<% if(comment.userid?.fullname){ %>/profile/<%=comment.userid?._id %><%}else{%>#<%}%>" class="comment-author"><% if(comment.userid?.fullname){ %>
+                              <%=comment.userid?.fullname %>
+                            <%}else{%>
+                              Admin
+                            <%}%></a>
                           </div>
                         </div>
                       </summary>
