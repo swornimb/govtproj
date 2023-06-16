@@ -22,6 +22,8 @@ app.use("/", citizenRoute);
 app.use("/admin", adminRoute);
 app.use("/user/mobile", mobileRoute);
 
-app.listen(5000,"0.0.0", () => {
+const port = process.env.PORT || 3000;
+
+app.listen(port,"0.0.0", () => {
   console.log("server is running");
 });
