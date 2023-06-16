@@ -22,6 +22,6 @@ app.use("/", citizenRoute);
 app.use("/admin", adminRoute);
 app.use("/user/mobile", mobileRoute);
 
-app.listen(5000, () => {
+app.listen(5000,"0.0.0", () => {
   console.log("server is running");
 });
