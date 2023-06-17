@@ -139,4 +139,33 @@ router.post("/type", jwtTokenAuthAdmin, async (req, res) => {
   }
 });
 
+router.post("/:complaintid/addcomment", async (req, res) => {
+  let complaintId = req.params.complaintid;
+  let comm = new comment({
+    complaintId: complaintId,
+    message: req.body.comment,
+    userid: req.cookies.userID,
+  });
+  await comm.save();
+  res.redirect(`/admin/details/${complaintId}`);
+});
+
+router.post(
+  "/:complaintid/:commentid/:userid/replycomment",
+  async (req, res) => {
+    let { complaintid, commentid, userid } = req.params;
+    let comm = await comment.findByIdAndUpdate(commentid, {
+      $push: {
+        reply: {
+          message: req.body.reply,
+          userid: userid,
+          username: "Admin",
+        },
+      },
+    });
+    await comm.save();
+    res.redirect(`/admin/details/${complaintid}`);
+  }
+);
+
 module.exports = router;
