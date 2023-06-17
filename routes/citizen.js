@@ -323,9 +323,9 @@ router.post("/forget-password", async (req, res) => {
           id: _user._id,
         };
         const token = jwt.sign(payload, secret, { expiresIn: "60m" });
-        const link = `http://localhost:5000/reset-password/${_user.id}/${token}`;
+        const link = `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`;
         console.log(
-          `http://localhost:5000/reset-password/${_user.id}/${token}`
+          `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`
         );
         var transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",

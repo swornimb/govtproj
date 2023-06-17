@@ -22,7 +22,7 @@ exports.allPublicComplaints = async (req, res) => {
     try {
 
         const result = await Complaints.find({
-            category: 'public'
+            category: 'Public'
         }).sort({ _id: -1 }).populate('userId')
         console.log({ result });
         res.status(200).send(result)
@@ -201,7 +201,7 @@ exports.forgotPassword = async (req, res) => {
                         from: 'prajita.balami@deerwalk.edu.np',
                         to: `${email}`,
                         subject: 'Reset Password',
-                        text: `http://localhost:5000/reset-password/${_user.id}/${token}`
+                        text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`
 
                     }
                     transporter.sendMail(mailOptions, function (error, info) {
@@ -284,18 +284,60 @@ exports.saveComments = async (req, res) => {
     complaintIdd = req.body.complaintId
 
     
-    let parentIdd = new mongoose.Types.ObjectId();
-    parentIdd = req.body.parentId
+    // let parentIdd = new mongoose.Types.ObjectId();
+    // parentIdd = req.body.parentId
 
 
     const data = new comment({
         message: req.body.message,
-        userId: userIdd,
+        userid: userIdd,
         complaintId : complaintIdd,
-        parentId : parentIdd || null
+        // parentId : parentIdd || null
     })
 
     data.save()
+        .then(data => {
+            res.status(200).send(data)
+        })
+        .catch(error => {
+            res.status(500).send({
+                message: error.message || "Something went wrong"
+            });
+
+        });
+
+}
+
+exports.saveReplies = async (req, res) => {
+    console.log("Here replies")
+    console.log(req.body)
+    if (!req.body) {
+        res.status(400).send({ status: 400, message: "Any field cannot be empty" });
+        return;
+    }
+
+    let commentId = req.params.id;
+
+    // let userIdd = new mongoose.Types.ObjectId();
+    // userIdd = req.body.userId
+    
+    // let complaintIdd = new mongoose.Types.ObjectId();
+    // complaintIdd = req.body.complaintId
+
+    
+
+
+    let comm = await comment.findByIdAndUpdate(commentId, {
+        $push: {
+          reply: {
+            message: req.body.message,
+            userid: req.body.userId,
+            username: req.body.username,
+          },
+        },
+      });
+
+    comm.save()
         .then(data => {
             res.status(200).send(data)
         })
@@ -314,7 +356,7 @@ exports.getComments = async (req, res) => {
         const result = await comment.find({
             complaintId: req.params.id
 
-        }).sort({ _id: -1 }).populate('userId')
+        }).sort({ _id: -1 }).populate('userid')
    ;
         res.status(200).send(result)
     }
@@ -325,7 +367,7 @@ exports.getComments = async (req, res) => {
 }
 
 exports.getComplaints = async (req,res) => {
-    const result = await Complaints.findOne({ _id: req.params.id }).lean();
+    const result = await Complaints.findOne({ _id: req.params.id });
     const comments_in_order = await comment.find({ complaintId: req.params.id})
     .sort({ _id: -1 })
     .populate('userId').lean();
