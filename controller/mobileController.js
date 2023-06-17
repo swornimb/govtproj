@@ -22,7 +22,7 @@ exports.allPublicComplaints = async (req, res) => {
     try {
 
         const result = await Complaints.find({
-            category: 'public'
+            category: 'Public'
         }).sort({ _id: -1 }).populate('userId')
         console.log({ result });
         res.status(200).send(result)
@@ -201,7 +201,7 @@ exports.forgotPassword = async (req, res) => {
                         from: 'prajita.balami@deerwalk.edu.np',
                         to: `${email}`,
                         subject: 'Reset Password',
-                        text: `http://localhost:5000/reset-password/${_user.id}/${token}`
+                        text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`
 
                     }
                     transporter.sendMail(mailOptions, function (error, info) {
