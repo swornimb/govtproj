@@ -158,7 +158,7 @@
       async function fetchdat2() {
         let value = await fetch(
           (window.location.href =
-            "http://localhost:5000/admin/complaint?area=" + search2.value)
+            "https://govtproj-production.up.railway.app/admin/complaint?area=" + search2.value)
         );
         console.log(value);
       }
@@ -181,18 +181,7 @@
         }
       }
     </script>
-<<<<<<< HEAD
-=======
-    <script>
-      async function fetchdat() {
-        let value = await fetch(
-          (window.location.href =
-            "https://govtproj-production.up.railway.app/admin/complaint?status=" + search.value)
-        );
-        console.log(value);
-      }
-    </script>
->>>>>>> 706ef8215a7d7cb7c1ec7da35231cc28ef50d5f3
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
       integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
