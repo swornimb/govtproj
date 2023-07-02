@@ -341,7 +341,7 @@ router.post("/forget-password", async (req, res) => {
           from: "prajita.balami@deerwalk.edu.np",
           to: `${email}`,
           subject: "Reset Password",
-          text: `http://localhost:5000/reset-password/${_user.id}/${token}`,
+          text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
