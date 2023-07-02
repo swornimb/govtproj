@@ -1,393 +1,357 @@
-const { default: mongoose } = require('mongoose');
-const Complaints = require('../models/complaint');
+const { default: mongoose } = require("mongoose");
+const Complaints = require("../models/complaint");
 const user = require("../models/user");
 const comment = require("../models/comment");
 
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const cloudinary = require("cloudinary").v2;
 
-const JWT_SECRET = 'hgfhd6ej4jhF3'
-const nodemailer = require('nodemailer');
-const _ = require('lodash')
+const JWT_SECRET = "hgfhd6ej4jhF3";
+const nodemailer = require("nodemailer");
+const _ = require("lodash");
 
 cloudinary.config({
-    cloud_name: "dgggekbbd",
-    api_key: "143297277947985",
-    api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
+  cloud_name: "dgggekbbd",
+  api_key: "143297277947985",
+  api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
 });
 
 exports.allPublicComplaints = async (req, res) => {
-    try {
-
-        const result = await Complaints.find({
-            category: 'Public'
-        }).sort({ _id: -1 }).populate('userId')
-        console.log({ result });
-        res.status(200).send(result)
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-
-}
+  try {
+    const result = await Complaints.find({
+      category: "public",
+    })
+      .sort({ _id: -1 })
+      .populate("userId");
+    console.log({ result });
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 exports.getOneComplaints = async (req, res) => {
-    try {
-
-        const result = await Complaints.find({
-            _id: req.params.id
-
-        });
-        res.status(200).send(result)
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-}
+  try {
+    const result = await Complaints.find({
+      _id: req.params.id,
+    });
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 
 exports.saveComplaint = async (req, res) => {
-    console.log("Here")
-    console.log(req.body)
-    if (!req.body) {
+  console.log("Here");
+  console.log(req.body);
+  if (!req.body) {
+    res.status(400).send({ status: 400, message: "Any field cannot be empty" });
+    return;
+  }
+  let userIdd = new mongoose.Types.ObjectId();
+  userIdd = req.body.userId;
 
-        res.status(400).send({ status: 400, message: "Any field cannot be empty" });
-        return;
-    }
-    let userIdd = new mongoose.Types.ObjectId();
-    userIdd = req.body.userId
+  const complain = new Complaints({
+    title: req.body.title,
+    description: req.body.description,
+    category: req.body.category,
+    images: [req.body.images],
+    userId: userIdd,
+    username: req.body.username,
+  });
 
-
-    const complain = new Complaints({
-        title: req.body.title,
-        description: req.body.description,
-        category: req.body.category,
-        images: [req.body.images],
-        userId: userIdd,
-        username: req.body.username,
+  complain
+    .save()
+    .then((data) => {
+      res.status(200).send(data);
     })
-
-    complain.save()
-        .then(data => {
-            res.status(200).send(data)
-        })
-        .catch(error => {
-            res.status(500).send({
-                message: error.message || "Something went wrong"
-            });
-
-        });
-
-}
-
+    .catch((error) => {
+      res.status(500).send({
+        message: error.message || "Something went wrong",
+      });
+    });
+};
 
 exports.signup = (req, res, next) => {
-    user.findOne({ email: req.body.email })
-        .then(_user => {
-            if (_user) {
-                res.status(201).send("User already exists.")
-            }
-            else {
-                bcrypt.hash(req.body.password, 10, function (err, hash) {
-                    let data = new user({
-                        fullname: req.body.fullname,
-                        address: req.body.address,
-                        phonenumber: req.body.phonenumber,
-                        email: req.body.email,
-                        password: hash,
-                    });
-                    data.save()
-                        .then(data => {
-                            res.status(200).send(data)
-                        })
-                        .catch(error => {
-                            res.status(500).send({
-                                message: error.message || "Something went wrong"
-                            });
-
-                        });
-                });
-            }
-        })
-
-}
+  user.findOne({ email: req.body.email }).then((_user) => {
+    if (_user) {
+      res.status(201).send("User already exists.");
+    } else {
+      bcrypt.hash(req.body.password, 10, function (err, hash) {
+        let data = new user({
+          fullname: req.body.fullname,
+          address: req.body.address,
+          phonenumber: req.body.phonenumber,
+          email: req.body.email,
+          password: hash,
+        });
+        data
+          .save()
+          .then((data) => {
+            res.status(200).send(data);
+          })
+          .catch((error) => {
+            res.status(500).send({
+              message: error.message || "Something went wrong",
+            });
+          });
+      });
+    }
+  });
+};
 
 exports.login = (req, res, next) => {
-    var email = req.body.email
-    var password = req.body.password
+  var email = req.body.email;
+  var password = req.body.password;
 
-    user.findOne({ email: email })
-        .then(_user => {
-            if (_user) {
-                bcrypt.compare(password, _user.password, function (err, result) {
-                    if (err) {
-                        res.send(err)
-                    }
-                    if (result) {
-                        let token = jwt.sign({ email: _user.email }, JWT_SECRET, { expiresIn: 6000 })
-                        res.send({
-                            status: 200,
-                            message: "Success",
-                            email: email,
-                            token: token,
-                            userId: _user._id,
-                            username: _user.fullname
-                        })
-
-                    }
-                    else {
-
-                        res.send({ status: 201, message: "Credentials is incorrect" })
-                    }
-                })
-
-
-            }
-            else {
-                res.send({ status: 202, message: "No user found" })
-
-            }
-        })
-}
-
+  user.findOne({ email: email }).then((_user) => {
+    if (_user) {
+      bcrypt.compare(password, _user.password, function (err, result) {
+        if (err) {
+          res.send(err);
+        }
+        if (result) {
+          let token = jwt.sign({ email: _user.email }, JWT_SECRET, {
+            expiresIn: 6000,
+          });
+          res.send({
+            status: 200,
+            message: "Success",
+            email: email,
+            token: token,
+            userId: _user._id,
+            username: _user.fullname,
+          });
+        } else {
+          res.send({ status: 201, message: "Credentials is incorrect" });
+        }
+      });
+    } else {
+      res.send({ status: 202, message: "No user found" });
+    }
+  });
+};
 
 exports.findTotal = async (req, res) => {
-    try {
-        const countQueue = await Complaints.countDocuments({ status: "Queue" });
-        const countProgress = await Complaints.countDocuments({ status: "Progress" });
-        const countSuccess = await Complaints.countDocuments({ status: "Success" });
-        const total = await Complaints.estimatedDocumentCount();
+  try {
+    const countQueue = await Complaints.countDocuments({ status: "Queue" });
+    const countProgress = await Complaints.countDocuments({
+      status: "Progress",
+    });
+    const countSuccess = await Complaints.countDocuments({ status: "Success" });
+    const total = await Complaints.estimatedDocumentCount();
 
-        res.send({ status: 200, total: total, Queue: countQueue, Progress: countProgress, Success: countSuccess })
-
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-
-}
+    res.send({
+      status: 200,
+      total: total,
+      Queue: countQueue,
+      Progress: countProgress,
+      Success: countSuccess,
+    });
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 exports.forgotPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
-        // res.send(email)
-        user.findOne({ email: email })
-            .then(_user => {
-                if (_user) {
+  try {
+    const { email } = req.body;
+    // res.send(email)
+    user.findOne({ email: email }).then((_user) => {
+      if (_user) {
+        const secret = JWT_SECRET + _user.password;
+        const payload = {
+          email: _user.email,
+          id: _user._id,
+        };
+        const token = jwt.sign(payload, secret, { expiresIn: "60m" });
+        const link = `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`;
 
-                    const secret = JWT_SECRET + _user.password
-                    const payload = {
-                        email: _user.email,
-                        id: _user._id
+        var transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          requireTLS: true,
+          auth: {
+            user: "prajita.balami@deerwalk.edu.np",
+            pass: "ljeibasebfiuhvzp",
+          },
+        });
+        var mailOptions = {
+          from: "prajita.balami@deerwalk.edu.np",
+          to: `${email}`,
+          subject: "Reset Password",
+          text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`,
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("email has been sent", info.response);
+          }
+        });
 
-                    }
-                    const token = jwt.sign(payload, secret, { expiresIn: '60m' })
-                    const link = `http://localhost:5000/reset-password/${_user.id}/${token}`
-
-                    var transporter = nodemailer.createTransport({
-                        host: 'smtp.gmail.com',
-                        port: 587,
-                        secure: false,
-                        requireTLS: true,
-                        auth: {
-                            user: 'prajita.balami@deerwalk.edu.np',
-                            pass: "ljeibasebfiuhvzp"
-                        }
-
-                    });
-                    var mailOptions = {
-                        from: 'prajita.balami@deerwalk.edu.np',
-                        to: `${email}`,
-                        subject: 'Reset Password',
-                        text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`
-
-                    }
-                    transporter.sendMail(mailOptions, function (error, info) {
-                        if (error) {
-                            console.log(error);
-                        }
-                        else {
-                            console.log("email has been sent", info.response);
-                        }
-                    })
-
-                    console.log(link)
-                    res.send({ status: 200, message: "Password reset link has been sent to your email." })
-
-
-                }
-                else {
-                    res.send({ status: 202, message: "No user found" })
-
-                }
-            })
-
-
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-
-}
+        console.log(link);
+        res.send({
+          status: 200,
+          message: "Password reset link has been sent to your email.",
+        });
+      } else {
+        res.send({ status: 202, message: "No user found" });
+      }
+    });
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 
 exports.getOwnComplaints = async (req, res) => {
-    try {
-        const id = req.params.id
-        const result = await Complaints.find({
-            userId: id
+  try {
+    const id = req.params.id;
+    const result = await Complaints.find({
+      userId: id,
+    }).sort({ _id: -1 });
 
-        }).sort({ _id: -1 });
-
-        // console.log({ result });
-        res.status(200).send(result)
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-}
+    // console.log({ result });
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 
 exports.getProfile = async (req, res) => {
-    const id = req.params.id
-    try {
-        const result = await user.find({
-            _id: id
+  const id = req.params.id;
+  try {
+    const result = await user.find({
+      _id: id,
+    });
 
-        });
-
-        // console.log({ result });
-        res.status(200).send(result)
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-
-}
-
+    // console.log({ result });
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 
 exports.saveComments = async (req, res) => {
-    console.log("Here comments")
-    console.log(req.body)
-    if (!req.body) {
-        res.status(400).send({ status: 400, message: "Any field cannot be empty" });
-        return;
-    }
+  console.log("Here comments");
+  console.log(req.body);
+  if (!req.body) {
+    res.status(400).send({ status: 400, message: "Any field cannot be empty" });
+    return;
+  }
 
-    let userIdd = new mongoose.Types.ObjectId();
-    userIdd = req.body.userId
-    
-    let complaintIdd = new mongoose.Types.ObjectId();
-    complaintIdd = req.body.complaintId
+  let userIdd = new mongoose.Types.ObjectId();
+  userIdd = req.body.userId;
 
-    
-    // let parentIdd = new mongoose.Types.ObjectId();
-    // parentIdd = req.body.parentId
+  let complaintIdd = new mongoose.Types.ObjectId();
+  complaintIdd = req.body.complaintId;
 
+  // let parentIdd = new mongoose.Types.ObjectId();
+  // parentIdd = req.body.parentId
 
-    const data = new comment({
-        message: req.body.message,
-        userid: userIdd,
-        complaintId : complaintIdd,
-        // parentId : parentIdd || null
+  const data = new comment({
+    message: req.body.message,
+    userid: userIdd,
+    complaintId: complaintIdd,
+    // parentId : parentIdd || null
+  });
+
+  data
+    .save()
+    .then((data) => {
+      res.status(200).send(data);
     })
-
-    data.save()
-        .then(data => {
-            res.status(200).send(data)
-        })
-        .catch(error => {
-            res.status(500).send({
-                message: error.message || "Something went wrong"
-            });
-
-        });
-
-}
+    .catch((error) => {
+      res.status(500).send({
+        message: error.message || "Something went wrong",
+      });
+    });
+};
 
 exports.saveReplies = async (req, res) => {
-    console.log("Here replies")
-    console.log(req.body)
-    if (!req.body) {
-        res.status(400).send({ status: 400, message: "Any field cannot be empty" });
-        return;
-    }
+  console.log("Here replies");
+  console.log(req.body);
+  if (!req.body) {
+    res.status(400).send({ status: 400, message: "Any field cannot be empty" });
+    return;
+  }
 
-    let commentId = req.params.id;
+  let commentId = req.params.id;
 
-    // let userIdd = new mongoose.Types.ObjectId();
-    // userIdd = req.body.userId
-    
-    // let complaintIdd = new mongoose.Types.ObjectId();
-    // complaintIdd = req.body.complaintId
+  // let userIdd = new mongoose.Types.ObjectId();
+  // userIdd = req.body.userId
 
-    
+  // let complaintIdd = new mongoose.Types.ObjectId();
+  // complaintIdd = req.body.complaintId
 
+  let comm = await comment.findByIdAndUpdate(commentId, {
+    $push: {
+      reply: {
+        message: req.body.message,
+        userid: req.body.userId,
+        username: req.body.username,
+      },
+    },
+  });
 
-    let comm = await comment.findByIdAndUpdate(commentId, {
-        $push: {
-          reply: {
-            message: req.body.message,
-            userid: req.body.userId,
-            username: req.body.username,
-          },
-        },
+  comm
+    .save()
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message: error.message || "Something went wrong",
       });
-
-    comm.save()
-        .then(data => {
-            res.status(200).send(data)
-        })
-        .catch(error => {
-            res.status(500).send({
-                message: error.message || "Something went wrong"
-            });
-
-        });
-
-}
+    });
+};
 
 exports.getComments = async (req, res) => {
-    try {
+  try {
+    const result = await comment
+      .find({
+        complaintId: req.params.id,
+      })
+      .sort({ _id: -1 })
+      .populate("userid");
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
 
-        const result = await comment.find({
-            complaintId: req.params.id
-
-        }).sort({ _id: -1 }).populate('userid')
-   ;
-        res.status(200).send(result)
-    }
-    catch (err) {
-        res.send({ status: 201, message: "Something went wrong" })
-        console.log(err)
-    }
-}
-
-exports.getComplaints = async (req,res) => {
-    const result = await Complaints.findOne({ _id: req.params.id });
-    const comments_in_order = await comment.find({ complaintId: req.params.id})
+exports.getComplaints = async (req, res) => {
+  const result = await Complaints.findOne({ _id: req.params.id });
+  const comments_in_order = await comment
+    .find({ complaintId: req.params.id })
     .sort({ _id: -1 })
-    .populate('userId').lean();
+    .populate("userId")
+    .lean();
 
-    result.comments_in_order = appendChildrenToParent(comments_in_order);
+  result.comments_in_order = appendChildrenToParent(comments_in_order);
 
-    console.log("Commmm", result)
-    res.send(result)
+  console.log("Commmm", result);
+  res.send(result);
 };
 
 function appendChildrenToParent(objects) {
-    const byId = _.keyBy(objects, "_id");
+  const byId = _.keyBy(objects, "_id");
 
-    _.forEach(objects, (obj) => {
-        const parent = byId[obj.parentId];
-        if (parent) {
-            parent.children = parent.children || [];
-            parent.children.push(obj);
-        }
-    });
+  _.forEach(objects, (obj) => {
+    const parent = byId[obj.parentId];
+    if (parent) {
+      parent.children = parent.children || [];
+      parent.children.push(obj);
+    }
+  });
 
-    return _.filter(objects, (obj) => !obj.parentId);
+  return _.filter(objects, (obj) => !obj.parentId);
 }
