@@ -234,7 +234,7 @@ router.post("/", jwtTokenAuth, async (req, res) => {
       description,
       category,
       username: req.cookies.user,
-      images: imageResult.length > 0 ? imageResult : null,
+      images: imageResult.length > 0 ? imageResult : [],
       userId: req.cookies.userID,
       area,
     });
