@@ -22,22 +22,31 @@ router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
     let database = await type.find();
     let status = req.query.status;
     let area = req.query.area;
-    console.log(area);
-    if (area) {
+    if (status == "" && area == "") {
+      var all = await Complaint.find({ category: "public" }).sort({
+        _id: -1,
+      });
+    } else if (status && area) {
       var all = await Complaint.find({
+        category: "public",
+        status: status,
         area: area,
       }).sort({
         _id: -1,
       });
-      console.log(all);
-    } else if (status) {
+    } else if (status && area == "") {
       var all = await Complaint.find({
+        category: "public",
         status: status,
       }).sort({
         _id: -1,
       });
+    } else if (area && status == "") {
+      var all = await Complaint.find({ category: "public", area: area }).sort({
+        _id: -1,
+      });
     } else {
-      var all = await Complaint.find().sort({
+      var all = await Complaint.find({ category: "public" }).sort({
         _id: -1,
       });
     }
