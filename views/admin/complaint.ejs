@@ -200,7 +200,7 @@
         let area = document.getElementById("area").value;
         console.log(status + area);
         let value = await fetch(
-          (window.location.href = `/complaint?status=${status}&area=${area}`)
+          (window.location.href = `/admin/complaint?status=${status}&area=${area}`)
         );
         console.log(value);
       }
