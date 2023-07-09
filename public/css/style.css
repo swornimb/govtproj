@@ -1,3 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+body {
+  font-family: "Roboto";
+  text-transform: capitalize;
+}
 .user-badge {
   border: solid 1px black;
   border-radius: 50%;
@@ -86,6 +91,7 @@ td {
   color: #df0303;
   background-color: rgba(223, 3, 3, 0.4);
 }
+
 .table-complaint-list {
   text-decoration: none;
   color: black;
@@ -94,13 +100,13 @@ td {
   background-image: linear-gradient(to left, #ee7b5e, #f1957e);
 }
 #queue {
-  background-image: linear-gradient(to left, #d3488e, #da65a0);
+  background-image: linear-gradient(to left, #c62f2f, #ca6868);
 }
 #progress {
-  background-image: linear-gradient(to left, #1aa57c, #20c997);
+  background-image: linear-gradient(to left, #4556f5, #7a87f8);
 }
 #completed {
-  background-image: linear-gradient(to left, #8845f5, #aa7af8);
+  background-image: linear-gradient(to left, #1aa57c, #20c997);
 }
 .date i {
   margin: 0px 5px 10px 0px;
@@ -110,7 +116,7 @@ td {
   justify-content: space-between;
 }
 .complaint-page-select {
-  width: 10%;
+  width: 12%;
 }
 .image img {
   width: 100%;
@@ -220,6 +226,14 @@ div[role="progressbar"]::before {
   background: #33c498;
   border: #33c498;
 }
+.btn-danger {
+  background-color: #df0303;
+}
+
+.btn-danger:hover {
+  background-color: #b00202;
+}
+
 #submitForm {
   color: black;
 }
@@ -232,7 +246,7 @@ div[role="progressbar"]::before {
 
 .sidenav {
   height: 100%;
-  width: 250px;
+  width: 200px;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -249,13 +263,15 @@ div[role="progressbar"]::before {
 }
 .sidenav li {
   background-color: #0fb482;
+  padding: 30px !important;
+  border-bottom: 1px solid #05845d;
 }
 .sidenav .toggle-btn {
   display: block;
   width: 100%;
   padding: 10px;
   text-align: center !important;
-  background-color: #555;
+  background-color: #049d70;
   border: none;
   padding: 20px 0px;
   color: #fff;
@@ -271,6 +287,7 @@ div[role="progressbar"]::before {
   list-style-type: none;
   padding: 0;
   margin: 0px 0px;
+  text-align: left;
 }
 
 .sidenav ul li {
@@ -282,9 +299,12 @@ div[role="progressbar"]::before {
   color: white;
   display: block;
 }
+.sidenav ul li a i {
+  margin-right: 10px;
+}
 
 .main-content {
-  margin-left: 250px;
+  margin-left: 200px;
   padding: 20px;
   transition: 0.5s;
 }
@@ -299,7 +319,6 @@ div[role="progressbar"]::before {
 .comment-thread {
   max-width: 100%;
   margin: auto;
-  padding: 0 30px;
   background-color: #fff;
   border: 1px solid transparent;
   border-radius: 20px;
@@ -321,6 +340,8 @@ div[role="progressbar"]::before {
 .comment {
   position: relative;
   margin: 20px auto;
+  background-color: #f8f9fa;
+  border-radius: 20px;
 }
 .comment-heading {
   display: flex;
@@ -366,7 +387,7 @@ div[role="progressbar"]::before {
   top: 50px;
   left: 0;
   width: 12px;
-  height: calc(100% - 50px);
+  height: calc(100% - 90px);
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   background-color: rgba(0, 0, 0, 0.1);
@@ -494,6 +515,28 @@ details.comment:not([open]) .comment-heading {
   text-align: center;
   color: #1aa57c;
 }
-.table-detail {
+table {
   text-transform: capitalize;
+}
+.previewImage {
+  width: 100%;
+}
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.detail-side {
+  margin-bottom: 20px;
+}
+.profile .profile-header {
+  background: #eeeeee;
+  padding: 10px;
+  font-size: 26px;
+  display: block;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.gapping {
+  padding: 20px;
 }

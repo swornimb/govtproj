@@ -11,6 +11,7 @@ const cloudinary = require("cloudinary").v2;
 const JWT_SECRET = "hgfhd6ej4jhF3";
 const nodemailer = require("nodemailer");
 const comment = require("../models/comment");
+const type = require("../models/type");
 
 router.use(
   fileUpload({
@@ -30,23 +31,43 @@ cloudinary.config({
 //all complaint get
 
 router.get("/complaint", jwtTokenAuth, async (req, res) => {
+  let complaintType = await type.find();
   let status = req.query.status;
-  if (!status) {
+  let area = req.query.area;
+  console.log(status + area);
+  if (status == "" && area == "") {
     var all = await Complaint.find({ category: "public" }).sort({
       _id: -1,
     });
-  } else {
+  } else if (status && area) {
+    var all = await Complaint.find({
+      category: "public",
+      status: status,
+      area: area,
+    }).sort({
+      _id: -1,
+    });
+  } else if (status && area == "") {
     var all = await Complaint.find({ category: "public", status: status }).sort(
       {
         _id: -1,
       }
     );
+  } else if (area && status == "") {
+    var all = await Complaint.find({ category: "public", area: area }).sort({
+      _id: -1,
+    });
+  } else {
+    var all = await Complaint.find({ category: "public" }).sort({
+      _id: -1,
+    });
   }
 
   res.render("citizen/complaint", {
     payload: all,
     userName: req.cookies.user,
     userid: req.cookies.userID,
+    area: complaintType,
   });
 });
 
@@ -76,6 +97,7 @@ router.get("/details/:id", jwtTokenAuth, async (req, res) => {
 // First page get
 router.get("/", async (req, res) => {
   try {
+    let allTypes = await type.find();
     let all = await Complaint.find({ category: "public" })
       .sort({ _id: -1 })
       .limit(9);
@@ -92,6 +114,7 @@ router.get("/", async (req, res) => {
       queue: queueData,
       progress: progressData,
       userid: req.cookies.userID,
+      area: allTypes,
     });
   } catch (error) {
     // Handle the exception
@@ -104,6 +127,7 @@ router.get("/profile/:id", async (req, res) => {
   try {
     let userIdObj = new mongoose.Types.ObjectId();
     userIdObj = req.params.id;
+
     let data = await user.findById(req.params.id);
     let allComplaints = await Complaint.find({ userId: userIdObj });
     res.render("citizen/profile", {
@@ -171,7 +195,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
 
 router.post("/", jwtTokenAuth, async (req, res) => {
   try {
-    const { title, description, category } = req.body;
+    const { title, description, category, area } = req.body;
     const file =
       req.files && req.files.photo
         ? Array.isArray(req.files.photo)
@@ -212,6 +236,7 @@ router.post("/", jwtTokenAuth, async (req, res) => {
       username: req.cookies.user,
       images: imageResult.length > 0 ? imageResult : null,
       userId: req.cookies.userID,
+      area,
     });
 
     console.log(complain);
@@ -341,7 +366,7 @@ router.post("/forget-password", async (req, res) => {
           from: "prajita.balami@deerwalk.edu.np",
           to: `${email}`,
           subject: "Reset Password",
-          text: `http://localhost:5000/reset-password/${_user.id}/${token}`,
+          text: `/reset-password/${_user.id}/${token}`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {

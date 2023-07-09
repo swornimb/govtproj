@@ -20,11 +20,23 @@
   <body>
     <% if(userName){%>
     <div class="sidenav">
-      <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+      <button class="toggle-btn" onclick="toggleNav()">&#9776;</button>
       <ul id="navItems">
-        <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
-        <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
-        <li><a href="/logout" data-i18n="logout">Logout</a></li>
+        <li>
+          <a href="/" data-i18n="dashboard"
+            ><i class="fa-solid fa-house"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="/complaint" data-i18n="complaints"
+            ><i class="fa-solid fa-list-check"></i> Complaints</a
+          >
+        </li>
+        <li>
+          <a href="/logout" data-i18n="logout"
+            ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+          >
+        </li>
       </ul>
     </div>
     <%}%>
@@ -101,7 +113,9 @@
             <div class="col-md-3">
               <div class="card" id="completed">
                 <div class="card-body">
-                  <h6 class="card-title" data-i18n="completed">Completed</h6>
+                  <h6 class="card-title" data-i18n="completed">
+                    Complaint Completed
+                  </h6>
                   <h3><%=success %></h3>
                   <div class="card-icon">
                     <i class="fa-solid fa-check"></i>
@@ -120,8 +134,8 @@
                     </h4>
                     <div class="form-area">
                       <form
-                        action="/"
                         method="post"
+                        action="/"
                         enctype="multipart/form-data"
                         onsubmit="return validateForm()"
                       >
@@ -135,6 +149,7 @@
                             type="text"
                             placeholder="Complaint Title"
                             class="form-control"
+                            id="title"
                             name="title"
                             required
                           />
@@ -148,8 +163,9 @@
                           <textarea
                             class="form-control"
                             rows="5"
-                            placeholder="complaint in detail"
+                            placeholder="Complaint In Detail"
                             name="description"
+                            id="description"
                             required
                           ></textarea>
                         </div>
@@ -163,6 +179,7 @@
                             class="form-select form-margin"
                             required
                             name="category"
+                            id="category"
                           >
                             <option value="public" selected data-i18n="public">
                               Public
@@ -170,6 +187,32 @@
                             <option value="private" data-i18n="private">
                               Private
                             </option>
+                          </select>
+                        </div>
+
+                        <div class="form-group form-margin">
+                          <label for="exampleInputPassword1" class="input-title"
+                            ><strong data-i18n="complaintCategory"
+                              >Area of Complain</strong
+                            ></label
+                          >
+                          <select
+                            class="form-select form-margin"
+                            required
+                            name="area"
+                            id="area"
+                          >
+                            <option value="" disabled selected>
+                              Choose an option
+                            </option>
+                            <% area.forEach(singleArea=>{ %>
+                            <option
+                              value="<%=singleArea.type%>"
+                              data-i18n="<%=singleArea.type%>"
+                            >
+                              <%=singleArea.type%>
+                            </option>
+                            <%})%>
                           </select>
                         </div>
 
@@ -183,6 +226,7 @@
                             type="file"
                             class="form-control"
                             name="photo"
+                            id="photo"
                             multiple
                           />
                         </div>
@@ -223,6 +267,9 @@
                             <th data-i18n="no">No</th>
                             <th data-i18n="complaintTitle">complaint Title</th>
                             <th data-i18n="status">Status</th>
+                            <th data-i18n="areaOfComplaint">
+                              Area of Complaint
+                            </th>
                             <th data-i18n="date">Date</th>
                           </tr>
                         </thead>
@@ -247,6 +294,7 @@
                                 <%}%></span
                               >
                             </td>
+                            <td><%=complaint.area %></td>
                             <td><%=complaint.Date.substr(0,15) %></td>
                           </tr>
                           <%}) %>
@@ -266,39 +314,43 @@
       // Function to validate the form
       function validateForm() {
         // Get the values of the form fields
-        var title = document.forms["complaintForm"]["title"].value;
-        var description = document.forms["complaintForm"]["description"].value;
-        var category = document.forms["complaintForm"]["category"].value;
-        var photo = document.forms["complaintForm"]["photo"].value;
+        var title = document.getElementById("title").value;
+        var description = document.getElementById("description").value;
+        var category = document.getElementById("category").value;
+        var photo = document.getElementById("photo").value;
+        var area = document.getElementById("area").value;
 
+        console.log(title);
         // Validate the title field
         if (title === "") {
           alert("Please enter a complaint title.");
           return false;
-        }
-
-        // Validate the description field
-        if (description === "") {
+        } else if (description === "") {
           alert("Please enter a complaint description.");
           return false;
-        }
-
-        // Validate the category field
-        if (category === "") {
+        } else if (category === "") {
           alert("Please select a complaint category.");
           return false;
-        }
-
-        // Validate the photo field (optional)
-        if (photo !== "") {
+        } else if (area === "") {
+          alert("Please add area of problem.");
+          return false;
+        } else if (photo !== "") {
           var allowedExtensions = /(\.jpg|\.jpeg|\.png|)$/i;
           if (!allowedExtensions.exec(photo)) {
             alert("Please upload an image file (jpg, jpeg, png, or gif).");
             return false;
           }
+          var fileSize = document.getElementById("photo").files[0].size; // Get the file size
+          var maxSize = 3 * 1024 * 1024; // Maximum file size in bytes (3MB)
+          if (fileSize > maxSize) {
+            alert("Please upload an image file smaller than 3MB.");
+            return false;
+          }
+        } else if (photo == "") {
+          alert("Please upload an image file.");
         }
+        alert("just checking");
 
-        // Form is valid, you can proceed with submitting the form
         return true;
       }
     </script>
@@ -317,7 +369,7 @@
           toggleBtn.innerHTML = "&#9776;";
         } else {
           navItems.style.display = "block";
-          toggleBtn.innerHTML = "CMS";
+          toggleBtn.innerHTML = "&#9776;";
         }
       }
     </script>

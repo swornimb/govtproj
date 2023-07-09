@@ -2,8 +2,8 @@
 <html>
   <head>
     <link
-      rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
@@ -20,11 +20,23 @@
   <body>
     <% if(userName){%>
     <div class="sidenav">
-      <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+      <button class="toggle-btn" onclick="toggleNav()">&#9776;</button>
       <ul id="navItems">
-        <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
-        <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
-        <li><a href="/logout" data-i18n="logout">Logout</a></li>
+        <li>
+          <a href="/" data-i18n="dashboard"
+            ><i class="fa-solid fa-house"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="/complaint" data-i18n="complaints"
+            ><i class="fa-solid fa-list-check"></i> Complaints</a
+          >
+        </li>
+        <li>
+          <a href="/logout" data-i18n="logout"
+            ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+          >
+        </li>
       </ul>
     </div>
     <%}%>
@@ -62,24 +74,13 @@
                       <h4 class="card-title" data-i18n="allComplaints">
                         All Complaints
                       </h4>
-
-                      <select
-                        class="form-select form-margin complaint-page-select"
-                        aria-label=".form-select-lg example"
-                        id="search"
-                        onchange="fetchdat()"
+                      <button
+                        class="btn btn-success"
+                        data-bs-toggle="modal"
+                        data-bs-target="#searches"
                       >
-                        <option value="All" selected data-i18n="all">
-                          All
-                        </option>
-                        <option value="Success" data-i18n="success">
-                          Success
-                        </option>
-                        <option value="Progress" data-i18n="progress">
-                          Progress
-                        </option>
-                        <option value="Queue" data-i18n="queue">Queue</option>
-                      </select>
+                        <i class="fa fa-magnifying-glass"></i>
+                      </button>
                     </div>
                     <div class="">
                       <div class="row">
@@ -91,6 +92,9 @@
                                 Complaint Title
                               </th>
                               <th data-i18n="status">Status</th>
+                              <th data-i18n="areaOfComplaint">
+                                Area of Complaint
+                              </th>
                               <th data-i18n="date">Date</th>
                             </tr>
                           </thead>
@@ -115,6 +119,7 @@
                                   <%}%></span
                                 >
                               </td>
+                              <td><%=complaint.area %></td>
                               <td><%=complaint.Date.substr(0,15) %></td>
                             </tr>
                             <%}) %>
@@ -130,16 +135,79 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" tabindex="-1" id="searches">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group form-margin">
+              <label for="exampleInputPassword1" class="input-title"
+                ><strong data-i18n="complaintCategory"
+                  >Complaint Category</strong
+                ></label
+              >
+              <select class="form-select form-margin" name="status" id="status">
+                <option value="" disabled selected data-i18n="public">
+                  Select Status
+                </option>
+                <option value="Queue" data-i18n="queue">Queue</option>
+                <option value="Progress" data-i18n="progress">Progress</option>
+                <option value="Complete" data-i18n="complete">Complete</option>
+              </select>
+            </div>
+
+            <div class="form-group form-margin">
+              <label for="exampleInputPassword1" class="input-title"
+                ><strong data-i18n="complaintCategory"
+                  >Area of Complain</strong
+                ></label
+              >
+              <select class="form-select form-margin" name="area" id="area">
+                <option value="" disabled selected>Choose an option</option>
+                <% area.forEach(singleArea=>{ %>
+                <option
+                  value="<%=singleArea.type%>"
+                  data-i18n="<%=singleArea.type%>"
+                >
+                  <%=singleArea.type%>
+                </option>
+                <%})%>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" onclick="fetchdat()">
+              Search
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
-      let search = document.getElementById("search");
       async function fetchdat() {
+        let status = document.getElementById("status").value;
+        let area = document.getElementById("area").value;
+        console.log(status + area);
         let value = await fetch(
-          (window.location.href =
-            "https://govtproj-production.up.railway.app/complaint?status=" + search.value)
+          (window.location.href = `/complaint?status=${status}&area=${area}`)
         );
         console.log(value);
       }
-      console.log(search);
       function toggleNav() {
         var sidenav = document.querySelector(".sidenav");
         var mainContent = document.querySelector(".main-content");
@@ -159,13 +227,18 @@
       }
     </script>
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
       crossorigin="anonymous"
     ></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+      integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
       crossorigin="anonymous"
     ></script>
     <script src="../../js/script.js"></script>

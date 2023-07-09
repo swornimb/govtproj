@@ -92,6 +92,37 @@ router.get("/dashboard", jwtTokenAuthAdmin, async (req, res) => {
   }
 });
 
+router.get("/delete/:id", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    await Complaint.findOneAndRemove({ _id: req.params.id });
+    res.redirect("/admin/complaint");
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+router.get(
+  "/imageDelete/:imageDelete/:id",
+  jwtTokenAuthAdmin,
+  async (req, res) => {
+    try {
+      let id = req.params.id;
+      let imageDelete = req.params.imageDelete;
+      imageDelete = imageDelete.replaceAll("-", "/");
+      let data = await Complaint.updateOne(
+        { _id: req.params.id },
+        { $pull: { images: { $in: [imageDelete] } } }
+      );
+      res.redirect(`/admin/details/${id}`);
+    } catch (error) {
+      // Handle the exception
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
 router.get("/logout", (req, res) => {
   res.clearCookie("admin");
   res.clearCookie("adminID");

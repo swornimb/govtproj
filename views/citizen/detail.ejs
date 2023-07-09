@@ -20,11 +20,23 @@
   <body>
     <% if(userName){%>
       <div class="sidenav">
-        <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+        <button class="toggle-btn" onclick="toggleNav()">&#9776;</button>
         <ul id="navItems">
-          <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
-          <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
-          <li><a href="/logout" data-i18n="logout">Logout</a></li>
+          <li>
+            <a href="/" data-i18n="dashboard"
+              ><i class="fa-solid fa-house"></i> Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="/complaint" data-i18n="complaints"
+              ><i class="fa-solid fa-list-check"></i> Complaints</a
+            >
+          </li>
+          <li>
+            <a href="/logout" data-i18n="logout"
+              ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+            >
+          </li>
         </ul>
       </div>
       <%}%>
@@ -123,6 +135,7 @@
             <div class="col-md-3 status-messages">
               <h3 data-i18n="status">Complaint Status</h3>
               <div class="timeline">
+                <% if(payload.statusmessege.length!=0){%>
                 <div class="outer">
                   <% payload.statusmessege.forEach(messege=>{%>
                     <div class="statuscard">
@@ -130,13 +143,16 @@
                     </div>
                   <%}) %>
                 </div>
+              <%}else{%>
+                <div class="outer">No Status Yet</div>
+              <%}%>
               </div>
             </div>
             <div class="row">
               <div class="col-md-12">
                 
                 <div class="comment-thread mt-4">
-                  <strong>Comment</strong>
+                  <h3>Comment</h3>
                   <% if((payload.userId==userid)||isAdmin){%>
                     <form action="/<%=payload._id %>/addcomment" method="post">
                       <textarea name="comment" class="form-control" required></textarea>
@@ -146,7 +162,7 @@
                   
                   <!-- Comment 1 start -->
                   <% allComment.forEach(comment =>{%>
-                    <details open class="comment" id="comment-1">
+                    <details open class="comment gapping" id="comment-1">
                       <a href="#comment-1" class="comment-border-link">
                         <span class="sr-only">Jump to comment-1</span>
                       </a>

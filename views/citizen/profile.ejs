@@ -19,11 +19,23 @@
   </head>
   <body>
     <div class="sidenav">
-      <button class="toggle-btn" onclick="toggleNav()">CMS</button>
+      <button class="toggle-btn" onclick="toggleNav()">&#9776;</button>
       <ul id="navItems">
-        <li><a href="/" data-i18n="dashboard">Dashboard</a></li>
-        <li><a href="/complaint" data-i18n="complaints">Complaints</a></li>
-        <li><a href="/logout" data-i18n="logout">Logout</a></li>
+        <li>
+          <a href="/" data-i18n="dashboard"
+            ><i class="fa-solid fa-house"></i> Dashboard</a
+          >
+        </li>
+        <li>
+          <a href="/complaint" data-i18n="complaints"
+            ><i class="fa-solid fa-list-check"></i> Complaints</a
+          >
+        </li>
+        <li>
+          <a href="/logout" data-i18n="logout"
+            ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+          >
+        </li>
       </ul>
     </div>
     <div class="main-content">
@@ -51,8 +63,8 @@
       <div class="dashboard swornim prajita">
         <div class="container">
           <% if((realuserid == userid)||(isAdmin)){ %>
-          <div>
-            <h1 data-i18n="profile">Profile</h1>
+          <div class="profile">
+            <span data-i18n="profile" class="profile-header">Profile</span>
           </div>
           <div class="form-complaint">
             <div class="row">
@@ -85,8 +97,8 @@
             </div>
           </div>
           <%}else{%>
-          <div>
-            <h1>Profile</h1>
+          <div class="profile">
+            <span data-i18n="profile" class="profile-header">Profile</span>
           </div>
           <div class="form-complaint">
             <div class="row">
@@ -107,8 +119,10 @@
             </div>
           </div>
           <%}%>
-          <div>
-            <h1 data-i18n="userComplaints">User's Complaints</h1>
+          <div class="profile">
+            <span data-i18n="userComplaints" class="profile-header"
+              >User's Complaint</span
+            >
           </div>
           <div class="form-complaint">
             <div class="row">
