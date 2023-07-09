@@ -37,7 +37,7 @@
           >
         </li>
         <li>
-          <a href="/logout" data-i18n="logout"
+          <a href="/admin/logout" data-i18n="logout"
             ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
           >
         </li>
@@ -353,7 +353,7 @@
 
       function deleteImage(image, id){
         var currentURI = window.location.href;
-        let newRoute = "/admin/imageDelete/"+image.replaceAll('/','-')+'/'+id;
+        let newRoute = "/admin/imageDelete?image="+image+'&id='+id;
         var updatedURI = currentURI.replace(window.location.pathname, newRoute);
         window.location.href = updatedURI;
         console.log(updatedURI)

@@ -102,26 +102,23 @@ router.get("/delete/:id", jwtTokenAuthAdmin, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-router.get(
-  "/imageDelete/:imageDelete/:id",
-  jwtTokenAuthAdmin,
-  async (req, res) => {
-    try {
-      let id = req.params.id;
-      let imageDelete = req.params.imageDelete;
-      imageDelete = imageDelete.replaceAll("-", "/");
-      let data = await Complaint.updateOne(
-        { _id: req.params.id },
-        { $pull: { images: { $in: [imageDelete] } } }
-      );
-      res.redirect(`/admin/details/${id}`);
-    } catch (error) {
-      // Handle the exception
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    }
+router.get("/imageDelete", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    let id = req.query.id;
+    let imageDelete = req.query.image;
+    console.log(imageDelete);
+    console.log(id);
+    let data = await Complaint.updateOne(
+      { _id: id },
+      { $pull: { images: { $in: [imageDelete] } } }
+    );
+    res.redirect(`/admin/details/${id}`);
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
-);
+});
 
 router.get("/logout", (req, res) => {
   res.clearCookie("admin");

@@ -183,6 +183,8 @@
                           <%=comment.message %>
                         </p>
                         <% if((payload.userId==userid)||isAdmin){%>
+                        <%=payload.userId%>
+                        <%=userid %> 
                         <button
                           type="button"
                           class="btn btn-primary"
