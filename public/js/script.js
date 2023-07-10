@@ -78,6 +78,7 @@ const translations = {
     areaOfComplaint: "गुनासोको क्षेत्र",
     complaintAreas: "गुनासो क्षेत्रहरू",
     addComplaintArea: "गुनासो क्षेत्र थप्नुहोस्",
+    complaintType:"गुनासोको प्रकार"
   },
 };
 
