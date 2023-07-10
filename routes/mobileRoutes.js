@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { allPublicComplaints,getOneComplaints,saveComplaint,login,signup,findTotal, forgotPassword,getOwnComplaints, 
-    getProfile, saveComments, getComments, getComplaints, saveReplies} = require('../controller/mobileController');
+    getProfile, saveComments, getComments, getComplaints, saveReplies, getAreas} = require('../controller/mobileController');
 
 // router.use(express.json());
 const authenticate = require('../middleware/authenticate')
@@ -20,6 +20,7 @@ router.route('/saveComments').post(saveComments);
 router.route('/getComments/:id').get(getComments);
 router.route('/getComplaints/:id').get(getComplaints);
 router.route('/saveReplies/:id').post(saveReplies);
+router.route('/getAreas').get(getAreas);
 
 
 

@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const Complaints = require("../models/complaint");
 const user = require("../models/user");
 const comment = require("../models/comment");
+const type = require("../models/type");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -61,6 +62,7 @@ exports.saveComplaint = async (req, res) => {
     images: req.body.images,
     userId: userIdd,
     username: req.body.username,
+    area: req.body.area,
   });
 
   complain
@@ -355,3 +357,17 @@ function appendChildrenToParent(objects) {
 
   return _.filter(objects, (obj) => !obj.parentId);
 }
+
+
+exports.getAreas = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await type.find();
+
+    // console.log({ result });
+    res.status(200).send(result);
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+};
