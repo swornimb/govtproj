@@ -178,15 +178,18 @@ exports.forgotPassword = async (req, res) => {
           secure: false,
           requireTLS: true,
           auth: {
-            user: "prajita.balami@deerwalk.edu.np",
-            pass: "ljeibasebfiuhvzp",
+            user: "sachiwalayap@gmail.com",
+            pass: "glngzwnflzjdnwdk",
+          },
+          tls: {
+            rejectUnauthorized: false,
           },
         });
         var mailOptions = {
-          from: "prajita.balami@deerwalk.edu.np",
+          from: "sachiwalayap@gmail.com",
           to: `${email}`,
           subject: "Reset Password",
-          text: `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`,
+          text: `http://192.168.1.102:3000/reset-password/${_user.id}/${token}`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
