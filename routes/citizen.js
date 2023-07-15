@@ -20,9 +20,9 @@ router.use(
 );
 
 cloudinary.config({
-  cloud_name: "dgggekbbd",
-  api_key: "143297277947985",
-  api_secret: "4qHP2KnzdsXat3ApEAtdeZYogQM",
+  cloud_name: "dibqxmlpc",
+  api_key: "893523661126839",
+  api_secret: "oMkSwedWwZpvq7OOkPQdiKh6tpg",
   secure: true,
 });
 
@@ -256,7 +256,7 @@ router.post("/login", async (req, res) => {
     if (loginUser != null) {
       let check = await bcrypt.compare(req.body.password, loginUser.password);
       if (check) {
-        if (loginUser.email == "admin@gmail.com") {
+        if (loginUser.email === "sachiwalayap@gmail.com") {
           let token = jwt.sign({ user: loginUser._id }, "admin", {
             expiresIn: 3600,
           }); // Env variable for key
@@ -268,6 +268,8 @@ router.post("/login", async (req, res) => {
           });
           res.redirect("/admin/dashboard");
         } else {
+          console.log(loginUser.email);
+          console.log(loginUser.email === "sachiwalayap@gmail.com");
           let token = jwt.sign({ user: loginUser._id }, "shhhhh", {
             expiresIn: 36000,
           }); // Env variable for key
@@ -348,9 +350,9 @@ router.post("/forget-password", async (req, res) => {
           id: _user._id,
         };
         const token = jwt.sign(payload, secret, { expiresIn: "60m" });
-        const link = `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`;
+        const link = `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`;
         console.log(
-          `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`
+          `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`
         );
         var transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
@@ -358,15 +360,18 @@ router.post("/forget-password", async (req, res) => {
           secure: false,
           requireTLS: true,
           auth: {
-            user: "prajita.balami@deerwalk.edu.np",
-            pass: "ljeibasebfiuhvzp",
+            user: "sachiwalayap@gmail.com",
+            pass: "glngzwnflzjdnwdk",
+          },
+          tls: {
+            rejectUnauthorized: false,
           },
         });
         var mailOptions = {
-          from: "prajita.balami@deerwalk.edu.np",
+          from: "sachiwalayap@gmail.com",
           to: `${email}`,
           subject: "Reset Password",
-          text: `https://govtproj-production.up.railway.app//reset-password/${_user.id}/${token}`,
+          text: `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
