@@ -189,7 +189,7 @@ exports.forgotPassword = async (req, res) => {
           from: "sachiwalayap@gmail.com",
           to: `${email}`,
           subject: "Reset Password",
-          text: `http://192.168.1.102:3000/reset-password/${_user.id}/${token}`,
+          text: `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
