@@ -4,6 +4,7 @@ const user = require("../models/user");
 const comment = require("../models/comment");
 const type = require("../models/type");
 
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -374,3 +375,44 @@ exports.getAreas = async (req, res) => {
     console.log(err);
   }
 };
+
+exports.reportComment = async (req,res) => {
+  const{user, complaint, comment} = req.params
+  
+    try {
+          var transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            requireTLS: true,
+            auth: {
+              user: "sachiwalayap@gmail.com",
+              pass: "glngzwnflzjdnwdk",
+            },
+            tls: {
+              rejectUnauthorized: false,
+            },
+          });
+          var mailOptions = {
+            from: "sachiwalayap@gmail.com",
+            to: "prajitabalami50@gmail.com",
+            subject: "Report Comment",
+            text: `The user with id ${user} has reported on comment id ${comment} of complaint id ${complaint}`,
+          };
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("email has been sent", info.response);
+            }
+          });
+  
+            res.send("Report sent");
+        
+      
+    } catch (err) {
+      res.send({ status: 201, message: "Something went wrong" });
+      console.log(err);
+    }
+  
+}
