@@ -376,43 +376,81 @@ exports.getAreas = async (req, res) => {
   }
 };
 
-exports.reportComment = async (req,res) => {
-  const{user, complaint, comment} = req.params
-  
-    try {
-          var transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            requireTLS: true,
-            auth: {
-              user: "sachiwalayap@gmail.com",
-              pass: "glngzwnflzjdnwdk",
-            },
-            tls: {
-              rejectUnauthorized: false,
-            },
+exports.reportComment = async (req, res) => {
+  const { user, complaint, comment } = req.params
+
+  try {
+    var transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: "sachiwalayap@gmail.com",
+        pass: "glngzwnflzjdnwdk",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+    var mailOptions = {
+      from: "sachiwalayap@gmail.com",
+      to: "prajitabalami50@gmail.com",
+      subject: "Report Comment",
+      text: `The user with id ${user} has reported on comment id ${comment} of complaint id ${complaint}`,
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("email has been sent", info.response);
+      }
+    });
+
+    res.send("Report sent");
+
+
+  } catch (err) {
+    res.send({ status: 201, message: "Something went wrong" });
+    console.log(err);
+  }
+
+}
+
+exports.delete_account = (req, res) => {
+  const id = req.params.id;
+
+  user.findByIdAndDelete(id)
+    .then(data => {
+      if (!data) {
+        res.status(404).send({ message: `Cannot delete with ${id}` })
+      }
+      else {
+        Complaints.deleteMany({userId:id})
+        .then(data => {
+          if (!data) {
+            res.status(404).send({ message: `Cannot delete with ${id}` })
+          }
+          else {
+            res.send({
+              message: "Complaint and user was deleted succesfully"
+            })
+          }
+        })
+        .catch(err => {
+          res.status(500)({
+            message: "Could not delete id" + id
           });
-          var mailOptions = {
-            from: "sachiwalayap@gmail.com",
-            to: "prajitabalami50@gmail.com",
-            subject: "Report Comment",
-            text: `The user with id ${user} has reported on comment id ${comment} of complaint id ${complaint}`,
-          };
-          transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("email has been sent", info.response);
-            }
-          });
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500)({
+        message: "Could not delete id" + id
+      });
+    });
+
+    
   
-            res.send("Report sent");
-        
-      
-    } catch (err) {
-      res.send({ status: 201, message: "Something went wrong" });
-      console.log(err);
-    }
-  
+
 }
