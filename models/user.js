@@ -1,8 +1,15 @@
 const mongoose = require("mongoose");
+
 const { required } = require("nodemon/lib/config");
 // mongoose.connect(
 //   "mongodb+srv://complaintmgmt1366:GLz2blyKA3RttsWx@cluster0.lcpvryx.mongodb.net/?retryWrites=true&w=majority"
 // );
+
+const type = require("./type");
+// mongoose.connect(
+//   "mongodb+srv://complaintmgmt1366:GLz2blyKA3RttsWx@cluster0.lcpvryx.mongodb.net/?retryWrites=true&w=majority"
+// );
+
 
 mongoose.connect("mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 const userSchema = mongoose.Schema({
