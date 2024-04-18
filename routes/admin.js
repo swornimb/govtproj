@@ -4,9 +4,23 @@ const { jwtTokenAuthAdmin } = require("../middleware/jwtTokenAuthAdmin");
 const { ObjectId } = require("mongodb");
 const comment = require("../models/comment");
 const type = require("../models/type");
+const user = require("../models/user");
+const { parse } = require("dotenv");
 const router = express.Router();
 
 // ------------------------------GET---------------------------------
+
+router.get("/applicationrequest", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    let users = await user.find();
+    res.render('admin/applicationRequest', {users:users})
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/type", jwtTokenAuthAdmin, async (req, res) => {
   try {
     let database = await type.find();
@@ -23,12 +37,9 @@ router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
     let status = req.query.status;
     let area = req.query.area;
     if (status == "" && area == "") {
-      var all = await Complaint.find({ category: "public" }).sort({
-        _id: -1,
-      });
+      var all = await Complaint.find().sort({ _id: -1 })
     } else if (status && area) {
       var all = await Complaint.find({
-        category: "public",
         status: status,
         area: area,
       }).sort({
@@ -36,17 +47,16 @@ router.get("/complaint", jwtTokenAuthAdmin, async (req, res) => {
       });
     } else if (status && area == "") {
       var all = await Complaint.find({
-        category: "public",
         status: status,
       }).sort({
         _id: -1,
       });
     } else if (area && status == "") {
-      var all = await Complaint.find({ category: "public", area: area }).sort({
+      var all = await Complaint.find({area: area }).sort({
         _id: -1,
       });
     } else {
-      var all = await Complaint.find({ category: "public" }).sort({
+      var all = await Complaint.find().sort({
         _id: -1,
       });
     }
@@ -150,6 +160,21 @@ router.post("/details/:id", jwtTokenAuthAdmin, async (req, res) => {
     all.save();
     console.log(all);
     res.redirect("/admin/dashboard");
+  } catch (error) {
+    // Handle the exception
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+router.post("/applicationrequest/:id", jwtTokenAuthAdmin, async (req, res) => {
+  try {
+    let oneuser = await user.findByIdAndUpdate(req.params.id,{
+      accountstatus: req.body.submited
+    })
+    oneuser.save()
+    res.redirect("/admin/applicationrequest");
   } catch (error) {
     // Handle the exception
     console.error(error);

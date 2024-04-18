@@ -36,29 +36,29 @@ router.get("/complaint", jwtTokenAuth, async (req, res) => {
   let area = req.query.area;
   console.log(status + area);
   if (status == "" && area == "") {
-    var all = await Complaint.find({ category: "public" }).sort({
+    var all = await Complaint.find({ userId: req.cookies.userID }).sort({
       _id: -1,
     });
   } else if (status && area) {
     var all = await Complaint.find({
-      category: "public",
+      userId: req.cookies.userID,
       status: status,
       area: area,
     }).sort({
       _id: -1,
     });
   } else if (status && area == "") {
-    var all = await Complaint.find({ category: "public", status: status }).sort(
+    var all = await Complaint.find({  userId: req.cookies.userID , status: status }).sort(
       {
         _id: -1,
       }
     );
   } else if (area && status == "") {
-    var all = await Complaint.find({ category: "public", area: area }).sort({
+    var all = await Complaint.find({ userId: req.cookies.userID, area: area }).sort({
       _id: -1,
     });
   } else {
-    var all = await Complaint.find({ category: "public" }).sort({
+    var all = await Complaint.find({ userId: req.cookies.userID }).sort({
       _id: -1,
     });
   }
@@ -98,7 +98,7 @@ router.get("/details/:id", jwtTokenAuth, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     let allTypes = await type.find();
-    let all = await Complaint.find({ category: "public" })
+    let all = await Complaint.find({ userId: req.cookies.userID })
       .sort({ _id: -1 })
       .limit(9);
     let everyData = await Complaint.find().count();
@@ -195,7 +195,7 @@ router.get("/reset-password/:id/:token", async (req, res) => {
 
 router.post("/", jwtTokenAuth, async (req, res) => {
   try {
-    const { title, description, category, area } = req.body;
+    const { title, description, area } = req.body;
     const file =
       req.files && req.files.photo
         ? Array.isArray(req.files.photo)
@@ -210,10 +210,6 @@ router.post("/", jwtTokenAuth, async (req, res) => {
 
     if (!description) {
       return res.status(400).send("Description is required");
-    }
-
-    if (!category) {
-      return res.status(400).send("Category is required");
     }
 
     if (!file) {
@@ -232,7 +228,6 @@ router.post("/", jwtTokenAuth, async (req, res) => {
     const complain = new Complaint({
       title,
       description,
-      category,
       username: req.cookies.user,
       images: imageResult.length > 0 ? imageResult : [],
       userId: req.cookies.userID,
@@ -268,21 +263,23 @@ router.post("/login", async (req, res) => {
           });
           res.redirect("/admin/dashboard");
         } else {
-          console.log(loginUser.email);
-          console.log(loginUser.email === "sachiwalayap@gmail.com");
-          let token = jwt.sign({ user: loginUser._id }, "shhhhh", {
-            expiresIn: 36000,
-          }); // Env variable for key
-          res.cookie("token", token, {
-            httpOnly: true,
-          });
-          res.cookie("user", loginUser.fullname, {
-            httpOnly: true,
-          });
-          res.cookie("userID", loginUser._id, {
-            httpOnly: true,
-          });
-          res.redirect("/");
+          if(loginUser.accountstatus==="approved"){
+            let token = jwt.sign({ user: loginUser._id }, "shhhhh", {
+              expiresIn: 36000,
+            }); // Env variable for key
+            res.cookie("token", token, {
+              httpOnly: true,
+            });
+            res.cookie("user", loginUser.fullname, {
+              httpOnly: true,
+            });
+            res.cookie("userID", loginUser._id, {
+              httpOnly: true,
+            });
+            res.redirect("/");
+          }else{
+            res.render("citizen/login", { messege: loginUser.accountstatus=="pending"?"pending":"rejected" });
+          }
         }
       } else {
         res.render("citizen/login", { messege: "Invalid Password" });
@@ -300,10 +297,10 @@ router.post("/login", async (req, res) => {
 // Signup Post
 
 router.post("/signup", async (req, res) => {
-  const { fullname, address, number, email, password } = req.body;
+  const { fullname, address, number, email, password, voterid } = req.body;
 
   // Validate input
-  if (!fullname || !address || !number || !email || !password) {
+  if (!fullname || !address || !number || !email || !password || !voterid) {
     return res.status(400).send("All fields are required");
   }
 
@@ -325,6 +322,8 @@ router.post("/signup", async (req, res) => {
         phonenumber: number,
         email,
         password: hash,
+        voterid,
+        accountstatus:"pending"
       });
       data.save();
     });

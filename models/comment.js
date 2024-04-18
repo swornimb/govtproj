@@ -6,6 +6,7 @@ mongoose.connect(
   "mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 );
 
+
 const userSchema = mongoose.Schema({
   message: {
     type: String,

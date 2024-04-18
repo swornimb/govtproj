@@ -26,26 +26,26 @@
                             <%} %>
     
                             <div class="form-group required">
-                                <lSabel for="username">Full Name</lSabel>
+                                <label for="username">Full Name</label>
                                 <input type="text" class="form-control text-lowercase" id="fullname" required=""
                                     name="fullname" value="">
                             </div>
 
                             <div class="form-group required">
-                                <lSabel for="username">Phone Number</lSabel>
+                                <label for="username">Phone Number</label>
                                 <input type="text" class="form-control text-lowercase" id="number" required=""
                                     name="number" value="">
                             </div>
 
                             <div class="form-group required">
-                                <lSabel for="username">Address</lSabel>
+                                <label for="username">Address</label>
                                 <input type="text" class="form-control text-lowercase" id="address" required=""
                                     name="address" value="">
                             </div>
 
                            
                             <div class="form-group required">
-                                <lSabel for="username">Email</lSabel>
+                                <label for="username">Email</label>
                                 <input type="text" class="form-control text-lowercase" id="email" required=""
                                     name="email" value="">
                             </div>
@@ -62,7 +62,12 @@
                                 <input type="password" class="form-control" required="" id="confirm-password" name="confirm-password"
                                     value="">
                             </div>
-
+                            <div class="form-group required">
+                              <label class="align-items-center">Voter Id
+                                  
+                              <input type="password" class="form-control" required="" id="voter-id" name="voterid"
+                                  value="">
+                          </div>
                             <div class="form-group pt-1">
                                 <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
                             </div>
@@ -85,7 +90,8 @@
           var email = document.getElementById("email").value;
           var password = document.getElementById("password").value;
           var confirmPassword = document.getElementById("confirm-password").value;
-      
+          var voterid = document.getElementById("voter-id").value;
+
           // Validate the full name field
           if (fullName === "") {
             alert("Please enter your full name.");
@@ -127,13 +133,17 @@
             alert("Passwords do not match.");
             return false;
           }
+
+          if(voterid===""){
+            alert("Please enter your voter's id");
+            return false;
+          }
       
           // Form is valid, you can proceed with submitting the form
           return true;
         }
       </script>
       <script>
-        console.log("Made By Swornim Bhattarai and Prajita Balami")
       </script>
 
 </body>

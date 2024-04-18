@@ -38,6 +38,11 @@ const translations = {
     areaOfComplaint: "Area Of Complaint",
     complaintAreas: "Complaint Areas",
     addComplaintArea: "Add Complaint Area",
+    complaintType:"Complaint Type",
+    approve: "Approve",
+    reject : "Reject",
+    voterid:"Voter Id",
+    request:"Request"
   },
   ne: {
     dashboard: "ड्यासबोर्ड",
@@ -78,9 +83,14 @@ const translations = {
     areaOfComplaint: "गुनासोको क्षेत्र",
     complaintAreas: "गुनासो क्षेत्रहरू",
     addComplaintArea: "गुनासो क्षेत्र थप्नुहोस्",
-    complaintType:"गुनासोको प्रकार"
+    complaintType:"गुनासोको प्रकार",
+    approve: "स्वीकार गर्नुहोस्",
+    reject : "अस्वीकार गर्नुहोस्",
+    voterid:"मतदाता पहिचान पत्र",
+    request:"अनुरोध"
   },
 };
+
 
 
 function translatePageContent(e) {

@@ -503,7 +503,7 @@ exports.reportComment = async (req, res) => {
     });
     var mailOptions = {
       from: "sachiwalayap@gmail.com",
-      to: "prajitabalami50@gmail.com",
+      to: "sachiwalayap@gmail.com",
       subject: "Report Comment",
       text: `The user with id ${user} has reported on comment id ${comment} of complaint id ${complaint}`,
     };

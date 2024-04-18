@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
+
+mongoose.connect("mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+
 // mongoose.connect(
 //   "mongodb+srv://complaintmgmt1366:GLz2blyKA3RttsWx@cluster0.lcpvryx.mongodb.net/?retryWrites=true&w=majority"
 // );
-mongoose.connect(
-  "mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-);
 
 const complaintSchema = mongoose.Schema({
   title: {
@@ -12,10 +12,6 @@ const complaintSchema = mongoose.Schema({
     required: true,
   },
   description: {
-    type: String,
-    required: true,
-  },
-  category: {
     type: String,
     required: true,
   },
