@@ -1,10 +1,17 @@
 const express = require("express");
+const session = require('express-session');
 const app = express();
 var path = require("path");
 var cookieParser = require("cookie-parser");
 
 var cors = require("cors");
 app.use(cors());
+
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.set("view engine", "ejs");
 

@@ -9,6 +9,8 @@ const fileUpload = require("express-fileupload");
 const { default: mongoose, get } = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const JWT_SECRET = "hgfhd6ej4jhF3";
+const Otp = require("../models/otpModel");
+const otpGenerator = require("otp-generator");
 const nodemailer = require("nodemailer");
 const comment = require("../models/comment");
 const type = require("../models/type");
@@ -155,6 +157,10 @@ router.get("/signup", async (_, res) => {
   res.render("citizen/signup", { message: "" });
 });
 
+router.get("/verification", async (_, res) => {
+  res.render("citizen/verify", { messege: "" });
+});
+
 // Logout Get
 router.get("/logout", (req, res) => {
   res.clearCookie("token");
@@ -244,6 +250,47 @@ router.post("/", jwtTokenAuth, async (req, res) => {
   }
 });
 
+router.post("/verification", async(req, res)=>{
+  const otpHolder = await Otp.find({
+    number: req.session.signupForm.number,
+  });
+
+
+  if (otpHolder.length === 0){
+    res.render("citizen/signup",{message:"OTP Expired"})
+    }else{
+      const rightOtpFind = otpHolder[otpHolder.length - 1];
+  const validUser = await bcrypt.compare(req.body.otp, rightOtpFind.otp);
+
+  console.log("Valid user test",validUser)
+
+  if (rightOtpFind.number === req.session.signupForm.number && validUser) {
+    console.log("Reached in")
+    console.log(req.session.signupForm.password)
+    bcrypt.hash(req.session.signupForm.password, 10, function (err, hash) {
+      let data = new user({
+        fullname:req.session.signupForm.fullname,
+        address:req.session.signupForm.address,
+        phonenumber: req.session.signupForm.number,
+        email:req.session.signupForm.email,
+        password: hash,
+        voterid:req.session.signupForm.voterid,
+        accountstatus:"pending"
+      });
+      data.save();
+    });
+    res.redirect("/login");
+    
+    const OTPDelete = await Otp.deleteMany({
+      number: rightOtpFind.number,
+    });
+    
+  } else {
+    res.render("citizen/signup",{message:"Invalid OTP"});  
+  }
+    }
+})
+
 // Login Post
 router.post("/login", async (req, res) => {
   try {
@@ -310,30 +357,52 @@ router.post("/signup", async (req, res) => {
 
   try {
     const existingUser = await user.findOne({ email });
-
     if (existingUser) {
       return res.render("citizen/signup", { message: "User already exists." });
-    }
-
-    bcrypt.hash(password, 10, function (err, hash) {
-      let data = new user({
-        fullname,
-        address,
-        phonenumber: number,
-        email,
-        password: hash,
-        voterid,
-        accountstatus:"pending"
+    }else{
+      const OTP = otpGenerator.generate(6, {
+        digits: true,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+        specialChars: false,
       });
-      data.save();
-    });
+      console.log("Generated OTP", OTP);
+      const otp = new Otp({ number: req.body.number, otp: OTP });
+      const salt = await bcrypt.genSalt(10);
+      otp.otp = await bcrypt.hash(otp.otp, salt);
+      await otp.save();
 
-    res.redirect("/login");
+      req.session.signupForm = req.body;
+      try {
+        const url = "https://sms.aakashsms.com/sms/v3/send/";
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              auth_token: 'a72c98cefead6de98cac653c080bf919c631cf11090922c135418eac913a5db0',
+              to: req.body.number,
+              text: `${OTP} is your OTP Code for Awaj. Thank you.`
+            })
+        });
+
+        const responseData = await response.json();
+
+        console.log(responseData); 
+        res.redirect('/verification')
+
+    } catch (error) {
+        console.error('Error sending SMS:', error);
+    }
+  }
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred.");
   }
 });
+
 
 // Frogot password Post
 
