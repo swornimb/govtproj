@@ -2,6 +2,7 @@ const express = require("express");
 const Complaint = require("../models/complaint");
 const { jwtTokenAuthAdmin } = require("../middleware/jwtTokenAuthAdmin");
 const { ObjectId } = require("mongodb");
+const { default: mongoose, get } = require("mongoose");
 const comment = require("../models/comment");
 const type = require("../models/type");
 const user = require("../models/user");
@@ -110,7 +111,26 @@ router.get("/dashboard", jwtTokenAuthAdmin, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+router.get("/profile/:id", async (req, res) => {
+  try {
+    let userIdObj = new mongoose.Types.ObjectId();
+    userIdObj = req.params.id;
 
+    let data = await user.findById(req.params.id);
+    let allComplaints = await Complaint.find({ userId: userIdObj });
+    res.render("admin/profile", {
+      userdata: data,
+      allComplaints: allComplaints,
+      userName: req.cookies.user,
+      userid: req.cookies.userID,
+      realuserid: req.params.id,
+      isAdmin: req.cookies.admin,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred.");
+  }
+});
 router.get("/delete/:id", jwtTokenAuthAdmin, async (req, res) => {
   try {
     await Complaint.findOneAndRemove({ _id: req.params.id });

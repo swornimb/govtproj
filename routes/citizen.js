@@ -242,7 +242,7 @@ router.post("/", jwtTokenAuth, async (req, res) => {
 
     console.log(complain);
     await complain.save();
-    res.redirect("/");
+    res.redirect("/cms");
   } catch (error) {
     // Handle the exception
     console.error(error);
@@ -279,7 +279,7 @@ router.post("/verification", async(req, res)=>{
       });
       data.save();
     });
-    res.redirect("/login");
+    res.redirect("/cms/login");
     
     const OTPDelete = await Otp.deleteMany({
       number: rightOtpFind.number,
@@ -323,7 +323,7 @@ router.post("/login", async (req, res) => {
             res.cookie("userID", loginUser._id, {
               httpOnly: true,
             });
-            res.redirect("/");
+            res.redirect("/cms");
           }else{
             res.render("citizen/login", { messege:loginUser.accountstatus=="pending"?"Account is pending":"Account is rejected" });
           }
@@ -391,7 +391,7 @@ router.post("/signup", async (req, res) => {
         const responseData = await response.json();
 
         console.log(responseData); 
-        res.redirect('/verification')
+        res.redirect('/cms/verification')
 
     } catch (error) {
         console.error('Error sending SMS:', error);
@@ -496,7 +496,7 @@ router.post("/:complaintid/addcomment", async (req, res) => {
     userid: req.cookies.userID,
   });
   await comm.save();
-  res.redirect(`/details/${complaintId}`);
+  res.redirect(`/cms/details/${complaintId}`);
 });
 
 router.post(
@@ -513,7 +513,7 @@ router.post(
       },
     });
     await comm.save();
-    res.redirect(`/details/${complaintid}`);
+    res.redirect(`/cms/details/${complaintid}`);
   }
 );
 

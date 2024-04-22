@@ -22,9 +22,11 @@ app.use(express.json());
 
 const citizenRoute = require("./routes/citizen.js");
 const adminRoute = require("./routes/admin.js");
+const publicRoute = require("./routes/public.js");
 const mobileRoute = require("./routes/mobileRoutes.js");
 
-app.use("/", citizenRoute);
+app.use("/", publicRoute);
+app.use("/cms", citizenRoute);
 app.use("/admin", adminRoute);
 app.use("/user/mobile", mobileRoute);
 

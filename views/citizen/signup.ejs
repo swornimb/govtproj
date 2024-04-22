@@ -20,7 +20,7 @@
                 <div class="">
                     <div class="card p-4">
                       
-                        <form id="submitForm"  method="post" onsubmit="return validateForm()" action="/signup">
+                        <form id="submitForm"  method="post" onsubmit="return validateForm()" action="/cms/signup">
                           <% if(message){ %>
                             <div class="alert alert-danger" role="alert"><%=message %></div>
                             <%} %>
@@ -81,7 +81,7 @@
                         </form>
                         <p class="small-xl pt-3 text-center">
                           <span class="text-muted">Already a member?</span>
-                          <a href="/login">Sign in</a>
+                          <a href="/cms/login">Sign in</a>
                         </p>
                     </div>
                 </div>
