@@ -96,32 +96,32 @@ exports.signup = (req, res, next) => {
       const salt = await bcrypt.genSalt(10);
       otp.otp = await bcrypt.hash(otp.otp, salt);
       await otp.save();
-      res.send("OTP sent")
+      res.status(200).send("OTP sent")
 
       const url = "https://sms.aakashsms.com/sms/v3/send/";
 
 
-      try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              auth_token: 'a72c98cefead6de98cac653c080bf919c631cf11090922c135418eac913a5db0',
-              to: req.body.phonenumber,
-              text: `${OTP} is your OTP Code for Awaj. Thank you.`
-            })
-        });
+    //   try {
+    //     const response = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //           'Accept': 'application/json',
+    //           'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //           auth_token: 'a72c98cefead6de98cac653c080bf919c631cf11090922c135418eac913a5db0',
+    //           to: req.body.phonenumber,
+    //           text: `${OTP} is your OTP Code for Awaj. Thank you.`
+    //         })
+    //     });
 
-        const responseData = await response.json();
+    //     const responseData = await response.json();
 
-        console.log(responseData); 
+    //     console.log(responseData); 
 
-    } catch (error) {
-        console.error('Error sending SMS:', error);
-    }
+    // } catch (error) {
+    //     console.error('Error sending SMS:', error);
+    // }
 
 
       // bcrypt.hash(req.body.password, 10, function (err, hash) {
@@ -280,7 +280,7 @@ exports.forgotPassword = async (req, res) => {
           id: _user._id,
         };
         const token = jwt.sign(payload, secret, { expiresIn: "60m" });
-        const link = `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`;
+        const link = `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`;
 
         var transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
