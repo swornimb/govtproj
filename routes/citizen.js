@@ -325,7 +325,7 @@ router.post("/login", async (req, res) => {
             });
             res.redirect("/");
           }else{
-            res.render("citizen/login", { messege: loginUser.accountstatus=="pending"?"pending":"rejected" });
+            res.render("citizen/login", { messege:loginUser.accountstatus=="pending"?"Account is pending":"Account is rejected" });
           }
         }
       } else {
