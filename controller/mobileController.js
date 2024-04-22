@@ -96,6 +96,7 @@ exports.signup = (req, res, next) => {
       const salt = await bcrypt.genSalt(10);
       otp.otp = await bcrypt.hash(otp.otp, salt);
       await otp.save();
+      res.status(200).send("OTP sent")
 
       const url = "https://sms.aakashsms.com/sms/v3/send/";
 
@@ -121,6 +122,29 @@ exports.signup = (req, res, next) => {
     } catch (error) {
         console.error('Error sending SMS:', error);
     }
+
+
+      // bcrypt.hash(req.body.password, 10, function (err, hash) {
+      //   let data = new user({
+      //     fullname: req.body.fullname,
+      //     address: req.body.address,
+      //     phonenumber: req.body.phonenumber,
+      //     email: req.body.email,
+      //     password: hash,
+      //     voterid: req.body.voterid,
+      //     accountstatus: req.body.accountstatus,
+      //   });
+      //   data
+      //     .save()
+      //     .then((data) => {
+      //       res.status(200).send(data);
+      //     })
+      //     .catch((error) => {
+      //       res.status(500).send({
+      //         message: error.message || "Something went wrong",
+      //       });
+      //     });
+      // });
     }
   });
 };
@@ -256,7 +280,7 @@ exports.forgotPassword = async (req, res) => {
           id: _user._id,
         };
         const token = jwt.sign(payload, secret, { expiresIn: "60m" });
-        const link = `https://govtproj-production.up.railway.app/reset-password/${_user.id}/${token}`;
+        const link = `http://awaj.pradip-paudel.com.np/reset-password/${_user.id}/${token}`;
 
         var transporter = nodemailer.createTransport({
           host: "smtp.gmail.com",
@@ -479,7 +503,7 @@ exports.reportComment = async (req, res) => {
     });
     var mailOptions = {
       from: "sachiwalayap@gmail.com",
-      to: "sachiwalayap@gmail.com",
+      to: "prajitabalami50@gmail.com",
       subject: "Report Comment",
       text: `The user with id ${user} has reported on comment id ${comment} of complaint id ${complaint}`,
     };
