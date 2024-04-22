@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const type = require("./type");
 
 mongoose.connect(
-    "mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://sachiwalayap:LSyx84Iv1dHcNBdY@cluster0.vgru4io.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
   );
 const otpSchema = mongoose.Schema({
     number: {
@@ -19,7 +19,7 @@ const otpSchema = mongoose.Schema({
     },
 },{timestamps: true})
 
-otpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 10 });
+otpSchema.index({ createdAt: 1 }, { expireAfterSeconds: 500 });
 
 const Otp = mongoose.model("Otp", otpSchema);
 

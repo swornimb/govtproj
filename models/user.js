@@ -11,7 +11,7 @@ const type = require("./type");
 // );
 
 
-mongoose.connect("mongodb+srv://swornim:mongodb@cluster0.hmhrskc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+mongoose.connect("mongodb+srv://sachiwalayap:LSyx84Iv1dHcNBdY@cluster0.vgru4io.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 const userSchema = mongoose.Schema({
   fullname: {
     type: String,
