@@ -7,6 +7,7 @@ const comment = require("../models/comment");
 const type = require("../models/type");
 const user = require("../models/user");
 const { parse } = require("dotenv");
+const { toLower } = require("lodash");
 const router = express.Router();
 
 // ------------------------------GET---------------------------------
@@ -204,8 +205,9 @@ router.post("/applicationrequest/:id", jwtTokenAuthAdmin, async (req, res) => {
 
 router.post("/type", jwtTokenAuthAdmin, async (req, res) => {
   try {
-    let area = req.body.carea;
-    area = area.toLowerCase();
+    console.log(req.body.type)
+    let area = req.body.type
+    area = toLower(area)
     console.log(area);
     let database = await type.find();
     console.log(database);

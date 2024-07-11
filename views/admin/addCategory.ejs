@@ -85,8 +85,7 @@
                     <form
                       action="/admin/type"
                       method="post"
-                      enctype="multipart/form-data"
-                      onsubmit="return validateForm()"
+                      onsubmit="validateForm()"
                     >
                       <div class="form-group form-margin">
                         <label class="input-title"
@@ -96,7 +95,6 @@
                         >
                         <select
                             class="form-select form-margin"
-                            
                             name="area"
                           >
                         <% database.forEach(data=>{%>
@@ -113,12 +111,12 @@
                           type="text"
                           placeholder="Add Complaint Area"
                           class="form-control"
-                          name="carea"
+                          name="type"
+                          id="type"
                           required
                         />
-                      </div>
 
-                      <div class="form-group mb-3 text-center">
+                      <div class="form-group m-3 text-center">
                         <button
                           type="submit"
                           class="btn btn-primary"
@@ -153,6 +151,18 @@
           navItems.style.display = "block";
           toggleBtn.innerHTML = "&#9776;";
         }
+      }
+
+      function validateForm() {
+        // Get the values of the form fields
+        var type = document.getElementById("type").value;
+        console.log(type)
+        // Validate the email field
+        if (type === "") {
+          alert("Please enter your category.");
+          return false;
+        }
+        return true;
       }
     </script>
     <script

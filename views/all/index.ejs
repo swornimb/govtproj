@@ -20,24 +20,30 @@
   <body style="text-transform:none;">
     <nav class="navbar">
       <div class="navbar-container container">
-        <a href="/" class="portfolio-logo">Awaj</a>
+        <a href="/" class="portfolio-logo" data-i18n="awaj">Awaj</a>
         <ul class="menu-items">
-          <li><a href="/aboutus">About</a></li>
-          <li><a href="/faq">FAQ</a></li>
-          <li><a href="/howtouse">How To Use</a></li>
+          <li><a href="/aboutus" data-i18n="about">About</a></li>
+          <li><a href="/faq" data-i18n="faq">FAQ</a></li>
+          <li><a href="/howtouse" data-i18n="howTo">How To Use</a></li>
         </ul>
-        <div><a href="/cms/login" class="btn btn-success" style="color: white;">Login</a></div>
+        <div>
+          <select id="languageSelect" onchange="translatePageContent(this)">
+            <option value="en">EN</option>
+            <option value="ne">NP</option>
+          </select>
+        </div>
+        <div><a href="/cms/login" class="btn btn-success" style="color: white;" data-i18n="login">Login</a></div>
       </div>
     </nav>
     <div class="banner">
       <div class="overlay"></div>
-      <div class="headline">Awaj - Transforming Grievances Into Action</div>
+      <div class="headline" data-i18n="landingText">Awaj - Transforming Grievances Into Action</div>
     </div>
     <div class="container">
       <div class="web-section">
-        <div class="web-section-title" data-i18n="">Welcome</div>
+        <div class="web-section-title" data-i18n="welcome">Welcome</div>
         <div class="row">
-          <div class="col-md-6 details" data-i18n="">
+          <div class="col-md-6 details" data-i18n="welcomeText">
             Welcome to our platform, led by Pradip Poudel, Member of the House of Representatives of Nepal. This portal serves as a dedicated space for collecting and resolving issues related to Kathmandu 5. 
 
 Your complaints are invaluable to us and we ensure a seamless process for registering them anytime. We ensure your inputs to the development of our community. 
@@ -46,7 +52,7 @@ Feel free to share your thoughts anytime.
           </div>
           <div class="col-md-6 detail-image">
             <img
-              src="https://img.freepik.com/free-photo/image-concept-contact-lenses-advertising_185193-109616.jpg?w=1480&t=st=1700750182~exp=1700750782~hmac=7c3ebfaf2199468e75d09ffaf768e52e8e1a217363dd1193895e5143fe34338c"
+              src="../image/pradipPoudel.jpeg"
             />
           </div>
         </div>
@@ -55,21 +61,21 @@ Feel free to share your thoughts anytime.
     <footer class="footer">
       <div class="container row">
         <div class="footer-col">
-          <h4>company</h4>
+          <h4 data-i18n="company">company</h4>
           <ul>
-            <li><a href="/aboutus">About Us</a></li>
-            <li><a href="/cms/login">Complaints</a></li>
+            <li><a href="/aboutus" data-i18n="about">About Us</a></li>
+            <li><a href="/cms/login" data-i18n="complaints">Complaints</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>get help</h4>
+          <h4 data-i18n="getHelp">get help</h4>
           <ul>
-            <li><a href="/faq">FAQ</a></li>
-            <li><a href="/howtouse">How To Use</a></li>
+            <li><a href="/faq" data-i18n="faq">FAQ</a></li>
+            <li><a href="/howtouse" data-i18n="howTo">How To Use</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>follow us</h4>
+          <h4 data-i18n="followUs">follow us</h4>
           <div class="social-links">
             <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="#"><i class="fa-brands fa-instagram"></i></a>
@@ -77,12 +83,14 @@ Feel free to share your thoughts anytime.
           </div>
         </div>
         <div class="footer-col">
-          <h4>Others</h4>
+          <h4 data-i18n="others">Others</h4>
           <ul>
-            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/privacy" data-i18n="privacyPolicy">Privacy Policy</a></li>
           </ul>
         </div>
       </div>
     </footer>
   </body>
 </html>
+      <script src="../../js/script.js"></script>
+

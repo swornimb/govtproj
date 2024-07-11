@@ -20,45 +20,63 @@
   <body style="text-transform:none;">
     <nav class="navbar">
       <div class="navbar-container container">
-        <div class="navbar-container container">
-          <a href="/" class="portfolio-logo">Awaj</a>
-          <ul class="menu-items">
-            <li><a href="/aboutus">About</a></li>
-            <li><a href="/faq">FAQ</a></li>
-            <li><a href="/howtouse">How To Use</a></li>
-          </ul>
-          <div><a href="/cms/login" class="btn btn-success" style="color: white;">Login</a></div>
+        <a href="/" class="portfolio-logo" data-i18n="awaj">Awaj</a>
+        <ul class="menu-items">
+          <li><a href="/aboutus" data-i18n="about">About</a></li>
+          <li><a href="/faq" data-i18n="faq">FAQ</a></li>
+          <li><a href="/howtouse" data-i18n="howTo">How To Use</a></li>
+        </ul>
+        <div>
+          <select id="languageSelect" onchange="translatePageContent(this)">
+            <option value="en">EN</option>
+            <option value="ne">NP</option>
+          </select>
         </div>
+        <div><a href="/cms/login" class="btn btn-success" style="color: white;" data-i18n="login">Login</a></div>
       </div>
     </nav>
     <div class="container">
       <div class="web-section">
-        <div class="web-section-title" data-i18n="">FAQ</div>
+        <div class="web-section-title" data-i18n="faq">FAQ</div>
         <div class="row">
           <div class="col-md-12 details">
             <div class="faq-question">
-              <div class="headers" ><strong data-i18n="">Q1: What is Awaj App?</strong></div>
+              <div class="headers" ><strong data-i18n="question1">Q1: What is Awaj App?</strong></div>
+              <div data-i18n="answer1">
                Awaj App is a digital portal to register complaints related to Kathmandu 5. This is led by Pradip Poudel, Member of the House of Representatives of Nepal, dedicated to addressing and resolving development issues of Kathmandu 5.
-            </div>
+              </div>
+              </div>
             <div class="faq-question">
-              <div class="headers"><strong>Q2: How can I register a complaint on Awaj App?</strong></div>
+              <div class="headers" ><strong data-i18n="question2">Q2: How can I register a complaint on Awaj App?</strong></div>
+             <div data-i18n="answer2">
               Please see the 'How to Use' section for details. 
             </div>
-            <div class="faq-question">
-              <div class="headers"><strong>Q3: What types of issues can I register complaints about?</strong></div>
-              You can register complaints about various issues such as Road, Water, Health, Education,' and more
             </div>
             <div class="faq-question">
-              <div class="headers"><strong>Q4: What happens after I submit a complaint?</strong></div>
+              <div class="headers"><strong data-i18n="question3">Q3: What types of issues can I register complaints about?</strong></div>
+              <div data-i18n="answer3">
+                You can register complaints about various issues such as Road, Water, Health, Education,' and more
+              </div>
+            </div>
+            <div class="faq-question">
+              <div class="headers"><strong data-i18n="question4">Q4: What happens after I submit a complaint?</strong></div>
+            <div data-i18n="answer4">
              The team will assess and accept your complaints then process to solve the problems as soon as possible. 
             </div>
-            <div class="faq-question">
-              <div class="headers"><strong>Q5: Is there a specific timeframe for complaint resolution and solving problems?</strong></div>
-            The team is committed to addressing your genuine concerns promptly. However, the resolution and solving times may vary according to the matter and issue.
             </div>
             <div class="faq-question">
-              <div class="headers"><strong>Q6: How can I contact the secretariat team for additional support?</strong></div>
-           Please feel free to reach out through the following information: <br/>
+              <div class="headers"><strong data-i18n="question5">Q5: Is there a specific timeframe for complaint resolution and solving problems?</strong></div>
+            <div data-i18n="answer5">
+
+              The team is committed to addressing your genuine concerns promptly. However, the resolution and solving times may vary according to the matter and issue.
+            </div>
+            </div>
+            <div class="faq-question">
+              <div class="headers"><strong data-i18n="question6">Q6: How can I contact the secretariat team for additional support?</strong></div>
+          <div data-i18n="answer6">
+
+            Please feel free to reach out through the following information: <br/>
+          </div> 
            <strong>Manoj Acharya</strong><br/>9849119261<br/>
            <strong>Prasad Ghimire</strong><br/>9851094868<br/>
            <strong>Email</strong><br/>ppsachiwalaya@gmail.com<br>
@@ -70,21 +88,21 @@
     <footer class="footer">
       <div class="container row">
         <div class="footer-col">
-          <h4>company</h4>
+          <h4 data-i18n="company">company</h4>
           <ul>
-            <li><a href="/aboutus">About Us</a></li>
-            <li><a href="/cms/login">Complaints</a></li>
+            <li><a href="/aboutus" data-i18n="about">About Us</a></li>
+            <li><a href="/cms/login" data-i18n="complaints">Complaints</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>get help</h4>
+          <h4 data-i18n="getHelp">get help</h4>
           <ul>
-            <li><a href="/faq">FAQ</a></li>
-            <li><a href="/howtouse">How To Use</a></li>
+            <li><a href="/faq" data-i18n="faq">FAQ</a></li>
+            <li><a href="/howtouse" data-i18n="howTo">How To Use</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>follow us</h4>
+          <h4 data-i18n="followUs">follow us</h4>
           <div class="social-links">
             <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="#"><i class="fa-brands fa-instagram"></i></a>
@@ -92,12 +110,13 @@
           </div>
         </div>
         <div class="footer-col">
-          <h4>Others</h4>
+          <h4 data-i18n="others">Others</h4>
           <ul>
-            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/privacy" data-i18n="privacyPolicy">Privacy Policy</a></li>
           </ul>
         </div>
       </div>
     </footer>
   </body>
 </html>
+<script src="../../js/script.js"></script>
